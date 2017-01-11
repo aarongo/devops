@@ -1,0 +1,271 @@
+{
+    "failed": {},
+    "success": {
+        "172.31.0.253": {
+            "invocation": {},
+            "changed": false,
+            "_ansible_verbose_override": true,
+            "ansible_facts": {
+                "ansible_product_serial": "VMware-56 4d 9e c8 fd 83 08 7e-6b 08 f1 6a 87 fb ae ce",
+                "ansible_form_factor": "Other",
+                "ansible_product_version": "None",
+                "ansible_fips": false,
+                "ansible_service_mgr": "init",
+                "ansible_user_id": "root",
+                "module_setup": true,
+                "ansible_userspace_bits": "64",
+                "ansible_distribution_version": "6.4",
+                "ansible_domain": "com",
+                "ansible_date_time": {
+                    "weekday_number": "3",
+                    "iso8601_basic_short": "20020403T114737",
+                    "tz": "CST",
+                    "weeknumber": "13",
+                    "hour": "11",
+                    "time": "11:47:37",
+                    "tz_offset": "+0800",
+                    "month": "04",
+                    "epoch": "1017805657",
+                    "iso8601_micro": "2002-04-03T03:47:37.448793Z",
+                    "weekday": "Wednesday",
+                    "iso8601_basic": "20020403T114737448692",
+                    "year": "2002",
+                    "date": "2002-04-03",
+                    "iso8601": "2002-04-03T03:47:37Z",
+                    "day": "03",
+                    "minute": "47",
+                    "second": "37"
+                },
+                "ansible_processor_cores": 2,
+                "ansible_virtualization_role": "guest",
+                "ansible_env": {
+                    "LANG": "en_US.UTF-8",
+                    "LC_ALL": "en_US.UTF-8",
+                    "SHELL": "/bin/bash",
+                    "LC_MESSAGES": "en_US.UTF-8",
+                    "SHLVL": "1",
+                    "SSH_TTY": "/dev/pts/0",
+                    "G_BROKEN_FILENAMES": "1",
+                    "SSH_CLIENT": "10.90.12.214 49166 22",
+                    "LESSOPEN": "|/usr/bin/lesspipe.sh %s",
+                    "PWD": "/root",
+                    "LOGNAME": "root",
+                    "USER": "root",
+                    "MAIL": "/var/mail/root",
+                    "PATH": "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin",
+                    "SSH_CONNECTION": "10.90.12.214 49166 172.31.0.253 22",
+                    "HOME": "/root",
+                    "_": "/usr/bin/python"
+                },
+                "ansible_processor_vcpus": 4,
+                "ansible_bios_version": "6.00",
+                "ansible_processor": [
+                    "GenuineIntel",
+                    "Intel(R) Xeon(R) CPU           X5650  @ 2.67GHz",
+                    "GenuineIntel",
+                    "Intel(R) Xeon(R) CPU           X5650  @ 2.67GHz",
+                    "GenuineIntel",
+                    "Intel(R) Xeon(R) CPU           X5650  @ 2.67GHz",
+                    "GenuineIntel",
+                    "Intel(R) Xeon(R) CPU           X5650  @ 2.67GHz"
+                ],
+                "ansible_virtualization_type": "VMware",
+                "ansible_lo": {
+                    "mtu": 16436,
+                    "active": true,
+                    "promisc": false,
+                    "ipv4": {
+                        "broadcast": "host",
+                        "netmask": "255.0.0.0",
+                        "network": "127.0.0.0",
+                        "address": "127.0.0.1"
+                    },
+                    "ipv6": [
+                        {
+                            "scope": "host",
+                            "prefix": "128",
+                            "address": "::1"
+                        }
+                    ],
+                    "device": "lo",
+                    "type": "loopback"
+                },
+                "ansible_memtotal_mb": 7760,
+                "ansible_architecture": "x86_64",
+                "ansible_default_ipv4": {
+                    "macaddress": "00:0c:29:fb:ae:ce",
+                    "network": "172.31.0.0",
+                    "mtu": 1500,
+                    "broadcast": "172.31.255.255",
+                    "alias": "eth0",
+                    "netmask": "255.255.0.0",
+                    "address": "172.31.0.253",
+                    "interface": "eth0",
+                    "type": "ether",
+                    "gateway": "172.31.0.1"
+                },
+                "ansible_swapfree_mb": 4095,
+                "ansible_default_ipv6": {},
+                "ansible_distribution_release": "Final",
+                "ansible_system_vendor": "VMware, Inc.",
+                "ansible_os_family": "RedHat",
+                "ansible_cmdline": {
+                    "LANG": "zh_CN.UTF-8",
+                    "rd_NO_LUKS": true,
+                    "rd_NO_LVM": true,
+                    "KEYBOARDTYPE": "pc",
+                    "rd_NO_MD": true,
+                    "quiet": true,
+                    "rhgb": true,
+                    "KEYTABLE": "us",
+                    "crashkernel": "129M@0M",
+                    "ro": true,
+                    "root": "UUID=9a510537-d182-4c2b-8fad-0bae37c0d129",
+                    "rd_NO_DM": true
+                },
+                "ansible_eth0": {
+                    "macaddress": "00:0c:29:fb:ae:ce",
+                    "pciid": "0000:03:00.0",
+                    "module": "vmxnet3",
+                    "mtu": 1500,
+                    "active": true,
+                    "promisc": false,
+                    "ipv4": {
+                        "broadcast": "172.31.255.255",
+                        "netmask": "255.255.0.0",
+                        "network": "172.31.0.0",
+                        "address": "172.31.0.253"
+                    },
+                    "ipv6": [
+                        {
+                            "scope": "link",
+                            "prefix": "64",
+                            "address": "fe80::20c:29ff:fefb:aece"
+                        }
+                    ],
+                    "device": "eth0",
+                    "type": "ether"
+                },
+                "ansible_user_gid": 0,
+                "ansible_selinux": false,
+                "ansible_userspace_architecture": "x86_64",
+                "ansible_product_uuid": "564D9EC8-FD83-087E-6B08-F16A87FBAECE",
+                "ansible_system": "Linux",
+                "ansible_pkg_mgr": "yum",
+                "ansible_memfree_mb": 5830,
+                "ansible_devices": {
+                    "sr0": {
+                        "scheduler_mode": "cfq",
+                        "rotational": "1",
+                        "vendor": "NECVMWar",
+                        "sectors": "2097151",
+                        "host": "IDE interface: Intel Corporation 82371AB/EB/MB PIIX4 IDE (rev 01)",
+                        "sectorsize": "512",
+                        "removable": "1",
+                        "support_discard": "0",
+                        "model": "VMware IDE CDR10",
+                        "size": "1024.00 MB",
+                        "holders": [],
+                        "partitions": {}
+                    },
+                    "sda": {
+                        "scheduler_mode": "cfq",
+                        "rotational": "1",
+                        "vendor": "VMware",
+                        "sectors": "104857600",
+                        "host": "SCSI storage controller: LSI Logic / Symbios Logic 53c1030 PCI-X Fusion-MPT Dual Ultra320 SCSI (rev 01)",
+                        "sectorsize": "512",
+                        "removable": "0",
+                        "support_discard": "0",
+                        "model": "Virtual disk",
+                        "size": "50.00 GB",
+                        "holders": [],
+                        "partitions": {
+                            "sda2": {
+                                "start": "1026048",
+                                "sectorsize": 512,
+                                "sectors": "8388608",
+                                "size": "4.00 GB"
+                            },
+                            "sda3": {
+                                "start": "9414656",
+                                "sectorsize": 512,
+                                "sectors": "95442944",
+                                "size": "45.51 GB"
+                            },
+                            "sda1": {
+                                "start": "2048",
+                                "sectorsize": 512,
+                                "sectors": "1024000",
+                                "size": "500.00 MB"
+                            }
+                        }
+                    }
+                },
+                "ansible_user_uid": 0,
+                "ansible_lvm": {
+                    "lvs": {},
+                    "vgs": {}
+                },
+                "ansible_distribution": "CentOS",
+                "ansible_dns": {
+                    "nameservers": [
+                        "8.8.8.8"
+                    ]
+                },
+                "ansible_ssh_host_key_dsa_public": "AAAAB3NzaC1kc3MAAACBAM7ukq7hVRp5tncirnKF9fxjLykmAmTIiV2ScddN+LAEJflmi0ysiszyXcYRl6M7R08czhwAg7eGmdoRqesZjK1RrvSVyppKWnxBpBUO6okuDpCdZV3QUbkiqzAm/ap93Ilnnq+bVyT+/us+CKvZ/i+clfq4rgKc+1HlZLdQnLTbAAAAFQCX+nIq8ieFkJS33LtFn5nbei2WvQAAAIA04EUPyfx+wob2q//PZRWkjM1mEpvsV9GDJbsrqYXJmBOxc74P3uZJBxnypTFa5rYAjWjGdBRZ0f907MB7oGdp5Kgtt37+7W9gP3IFGw1iNiVjAv9mkxg7BCLI9KIErv9rQ939hx6lvGlp8ROdg/xcj3+QSGpTmSbnzMdems//wQAAAIEAuyPE9qQ+WB+Q4JTGKewXnCPWJo8Ke32FW+3xlgm7OkwIYMImaL9YW/29+DiCBr1toM2DSmLfuteN2NF/Ib+QL2hC4YTAeRm8LPuA9o841/P9l5w585/kJbA59zzP+f64ASlpIY91Wf8k7s8LTNnnFJ1GYLFB01uJa+GSy9Kj3wY=",
+                "ansible_user_dir": "/root",
+                "ansible_processor_count": 2,
+                "ansible_hostname": "salt-master",
+                "ansible_swaptotal_mb": 4095,
+                "ansible_bios_date": "07/30/2013",
+                "ansible_all_ipv6_addresses": [
+                    "fe80::20c:29ff:fefb:aece"
+                ],
+                "ansible_interfaces": [
+                    "lo",
+                    "eth0"
+                ],
+                "ansible_uptime_seconds": 2087899,
+                "ansible_machine_id": "217beee884633ce260cd630800000011",
+                "ansible_ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAABIwAAAQEA4eskNMIynPUbWVU0rBQBAAfzBENAZ4/girZyw74Jdo0q17S0Qnurgx6h6jA3baoTjrdo+pv8qfsJlAre0XCWAy9RqM8Gl0OiIKi+6GLPOwFp7Kp7wJsQRAzvzoMylam7hTVhp68M2iFL7slT40EkRl/ZkzvrcRZsvkwRde5w+sJyBlRee4ogY4Jvm5c4KHDxTPxVsMBnt/NzRPJ7Jz6qVb9Fpp/wt/PqJejUE9J3xCMgzGkRCLlFPBeCcBzo7IL5Tq4mUPNkFbvYOOoYubnsunzDd8f45UuTDMdskX2JJWbWXANkhREAnGRoiVDPDReGnz4/MltT+ZYn+AHfhSFE2w==",
+                "ansible_machine": "x86_64",
+                "ansible_user_gecos": "root",
+                "ansible_kernel": "2.6.32-358.el6.x86_64",
+                "ansible_processor_threads_per_core": 1,
+                "ansible_fqdn": "salt-master.com",
+                "ansible_mounts": [
+                    {
+                        "uuid": "9a510537-d182-4c2b-8fad-0bae37c0d129",
+                        "size_total": 48099618816,
+                        "mount": "/",
+                        "size_available": 227315712,
+                        "fstype": "ext4",
+                        "device": "/dev/sda3",
+                        "options": "rw"
+                    },
+                    {
+                        "uuid": "9f68312d-85a2-49e3-935e-0496fa05e332",
+                        "size_total": 507744256,
+                        "mount": "/boot",
+                        "size_available": 443721728,
+                        "fstype": "ext4",
+                        "device": "/dev/sda1",
+                        "options": "rw"
+                    }
+                ],
+                "ansible_memory_mb": {},
+                "ansible_python_version": "2.6.6",
+                "ansible_product_name": "VMware Virtual Platform",
+                "ansible_user_shell": "/bin/bash",
+                "ansible_distribution_major_version": "6",
+                "ansible_all_ipv4_addresses": [
+                    "172.31.0.253"
+                ],
+                "ansible_nodename": "salt-master.com"
+            },
+            "_ansible_no_log": false
+        }
+    },
+    "unreachable": {}
+}
