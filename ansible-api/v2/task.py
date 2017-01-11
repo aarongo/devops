@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import json
@@ -15,37 +16,43 @@ from ansible import constants as C
 
 class ResultCallback(CallbackBase):
 
+    # ansible 运行时的返回结果处理
     def __init__(self, *args, **kwargs):
         super(ResultCallback, self).__init__(*args, **kwargs)
         self.host_ok = {}
         self.host_unreachable = {}
         self.host_failed = {}
 
+    # 当ansible 运行时无法到达时返回结果
     def v2_runner_on_unreachable(self, result):
         self.host_unreachable[result._host.get_name()] = result
 
+    # 当 ansible 成功时返回
     def v2_runner_on_ok(self, result,  *args, **kwargs):
         self.host_ok[result._host.get_name()] = result
 
+    # 当 ansible 失败时返回
     def v2_runner_on_failed(self, result,  *args, **kwargs):
         self.host_failed[result._host.get_name()] = result
 
 
 class MyRunner(object):
 
-    def run_playbooks(self, host_list, playbooks_path):
+    # 定义运行 playbooks传入主机列表 和 playbooks路径列表
+    def run_playbooks(self, host_list, playbook_path):
+        # 管理变量的类,包括主机,组,扩展等变量
         variable_manager = VariableManager()
+        # 用来加载解析yaml文件或JSON内容,并且支持vault的解密
         loader = DataLoader()
-
+        # 根据 inventory 加载对应变量
         inventory = Inventory(
             loader=loader, variable_manager=variable_manager,
             host_list=host_list)
-        playbook_path = playbooks_path
 
         if not os.path.exists(playbook_path):
             print '[INFO] The playbook does not exist'
             sys.exit()
-
+        # playbooks 运行时的变量相当于本地的 ansible.cfg 文件
         Options = namedtuple('Options', ['listtags', 'listtasks', 'listhosts',
                                          'syntax', 'connection', 'module_path',
                                          'forks', 'remote_user',
@@ -62,10 +69,12 @@ class MyRunner(object):
                           verbosity=None, check=False)
 
         # This can accomodate various other command line arguments.`
+        # 运行 playbooks 时的额外参数
         # variable_manager.extra_vars = {'hosts': 'mywebserver'}
-
+        # 可以使用密码进行连接
         passwords = {}
 
+        # 运行 playbooks
         pbex = PlaybookExecutor(playbooks=[playbook_path], inventory=inventory,
                                 variable_manager=variable_manager, loader=loader,
                                 options=options, passwords=passwords)

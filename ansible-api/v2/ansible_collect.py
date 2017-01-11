@@ -4,17 +4,16 @@ import json
 import xlsxwriter
 
 
-# a = MyRunner()
-# print a.run_playbooks(host_list=['172.31.0.253', '172.31.1.250'],
-#                     playbooks_path='/Users/lonny/Documents/Ansible_Book/playbooks/a.yml')
-
-
 def base_info(host):
     get_resluts = MyRunner().Order_Run(host_list=host,
                                        module_name='setup', module_args='')
+    # 定义返回结果集
     resluts = {}
 
+    # 转换结果集为 json 格式,后续处理使用
     data = json.loads(get_resluts)
+
+    # 根据出入的 iP 进行结果保存
     for ip in host:
         get_results = data['success'][ip]['ansible_facts']
         mem_total = get_results['ansible_memtotal_mb']
@@ -39,9 +38,12 @@ def base_info(host):
 
 
 def covent_excel(data):
+    # 结果处理
     workbook = xlsxwriter.Workbook('systeminfo.xlsx')
     worksheet = workbook.add_worksheet()
+    # 行
     row = 0
+    # 列
     col = 0
     # 设置A1 字段
     headings = [u'IP地址', u'统计信息', u'结果']
@@ -60,6 +62,11 @@ def covent_excel(data):
     worksheet.set_column('A:A', 15)  # 设置字段宽度
     worksheet.set_column('B:B', 20)
     worksheet.set_column('C:C', 45)
+    '''
+        1.将结果中的 ip 添加到 excel 中的第一列
+        2.将结果中的 ip 对应字段添加到第二列
+        3.将结果中的 ip 对应字段的值添加到对应的第三列
+    '''
     for key in data.keys():
         row += 1
         worksheet.write(row, col, key, format)
@@ -75,7 +82,6 @@ def main():
     host_list = ['172.31.0.253', '10.90.3.110',
                  '172.31.10.100', '172.31.1.252']
     # run convent execl
-    print base_info(host=host_list)
     covent_excel(base_info(host=host_list))
 
 
