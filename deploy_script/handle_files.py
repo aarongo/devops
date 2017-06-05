@@ -75,4 +75,3 @@ def process_link():
         if os.path.islink(dest_deploy_path):
             print "\033[32mCrate Link Process Is Scueeful\033[0m"
         # 创建启动程序链接----END
-

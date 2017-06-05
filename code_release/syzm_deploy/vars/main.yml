@@ -1,0 +1,12 @@
+---
+# 项目部署目录
+deploy_directory: "/software/deploy_{{ project_name }}"
+# 部署的项目名称
+deploy_project_name: "sy-cybershop-{{ project_name }}-3.1.1-SNAPSHOT"
+# 项目总存放位置
+project_repository: "{{ repository }}"
+# 部署需要的文件
+use_project: "{{ project_repository }}/{{ time }}/{{ svn_number }}/{{ deploy_project_name }}"
+# 脚本存放路径
+script_directory: "/software/script"
+

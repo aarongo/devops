@@ -1,0 +1,40 @@
+---
+- name: restart tomcat {{ project_name }}
+  shell: "nohup ./syzm_{{ project_name }} -d restart"
+  args:
+    chdir: "{{ script_directory }}"
+  when: project_name == "rest-api"
+
+
+- name: restart tomcat {{ project_name }}
+  shell: "nohup ./syzm_{{ project_name }} -d restart &"
+  args:
+    chdir: "{{ script_directory }}"
+  when: project_name == "web"
+
+
+- name: restart tomcat {{ project_name }}
+  shell: "nohup ./syzm_{{ project_name }} -d restart &"
+  args:
+    chdir: "{{ script_directory }}"
+  when: project_name == "dubbo-index"
+
+
+- name: restart tomcat {{ project_name }}
+  shell: "nohup ./syzm_{{ project_name }} -d restart &"
+  args:
+    chdir: "{{ script_directory }}"
+  when: project_name == "dubbo-price"
+
+
+- name: tomcat status {{ project_name }}
+  shell: "nohup ./syzm_{{ project_name }} -d status &"
+  args:
+    chdir: "{{ script_directory }}"
+  register: status_code
+  until: status_code.stdout.find("200") != -1
+  retries: 18
+  delay: 10
+  changed_when: false
+- debug: msg="{{ project_name }} access code {{ status_code.stdout }} is sucessful!!! "
+  when: status_code.stdout == "200"
