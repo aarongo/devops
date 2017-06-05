@@ -1,0 +1,10 @@
+---
+- name: include master main
+  include: deploy_link/main.yml
+  tags: 
+    - deploy
+
+- name: include rollback main
+  include: rollback/main.yml
+  tags:
+    - rollback

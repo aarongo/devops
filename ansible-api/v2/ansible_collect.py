@@ -80,7 +80,7 @@ def covent_excel(data):
 
 def main():
     host_list = ['172.31.0.253', '10.90.3.110',
-                 '172.31.10.100', '172.31.1.252']
+                 '172.31.10.100', '172.31.1.252', '172.31.1.250']
     # run convent execl
     covent_excel(base_info(host=host_list))
 

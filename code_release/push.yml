@@ -1,0 +1,8 @@
+---
+- hosts: "{{ hosts }}"
+  tasks:
+    - name: push project files to Remote Server
+      synchronize:
+        src: "{{ src_dir }}"
+        dest: "{{ dest_dir }}"
+
