@@ -42,6 +42,14 @@
   when: project_name == "wap"
 
 
+- name: restart tomcat {{ project_name }}
+  shell: "nohup ./syzm_{{ project_name }} -d restart"
+  args:
+    chdir: "{{ script_directory }}"
+  when: project_name == "itsupport"
+
+
+
 - name: tomcat status {{ project_name }}
   shell: "nohup ./syzm_{{ project_name }} -d status &"
   args:

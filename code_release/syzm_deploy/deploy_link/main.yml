@@ -5,5 +5,14 @@
     dest: "{{ deploy_directory }}/{{ deploy_project_name }}"
     state: link
 
+
+- name: change soft link for process {{ project_name }}
+  file:
+    src: "{{ use_itsupport_project }}"
+    dest: "{{ deploy_directory }}/{{ itsupport_name }}"
+    state: link
+  when: project_name == "itsupport"
+
+
 - name: include syzm_process main
   include: syzm_process/main.yml
