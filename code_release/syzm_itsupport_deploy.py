@@ -19,11 +19,11 @@ import logging.config
 # jenkins 工作目录
 # JENKINS_WORKBASW = "/software/Jenkins_Home/jobs/syzm_test/workspace"
 # code 存放位置
-CODE_WORKSPACE = "/software/code_registroy/syzm_test"
+CODE_WORKSPACE = "/software/code_registroy/itsupport"
 # 代码 export 目录
 CODE_EXPORT = "/software/code_export"
 # 代码 export 名称
-CODE_EXPORT_NAME = "syzm_test"
+CODE_EXPORT_NAME = "itsupport"
 # export 路径
 export_path = "%s/%s" % (CODE_EXPORT, CODE_EXPORT_NAME)
 # 编译后代码存放路径
@@ -150,7 +150,7 @@ def codewar(version, project_name, code_time):
     if codebuild() == 0:
         print "\033[32m项目包处理\033[0m"
         # 项目名称
-        CODE_WAR_NAME = "sy-cybershop-%s-3.1.1-SNAPSHOT" % project_name
+        CODE_WAR_NAME = "cybershop-%s-0.0.1-SNAPSHOT" % project_name
         PROJECT_PATH = "%s/%s/%s/%s" % (PROJECT_REPOSITORY, code_time, version, CODE_WAR_NAME)
         if not os.path.exists(PROJECT_PATH):
             os.makedirs(PROJECT_PATH)
@@ -173,6 +173,7 @@ def codewar(version, project_name, code_time):
 def pushproject(project_name):
     # 使用ansible rsync模块直接推送到远端
     push_command = """ansible-playbook /etc/ansible/roles/push.yml --extra-vars "hosts=%s src_dir=%s dest_dir=%s" """ % (project_name, PROJECT_REPOSITORY, PUSH_PATH)
+    print push_command
     code_push = Popen(push_command, shell=True, stdout=PIPE, stderr=PIPE)
     stdout, stderr = code_push.communicate()
     messages = "project push to remote Server success "
@@ -188,6 +189,7 @@ def deployproject(project_name, code_time, svn_number, tags_name):
                  % (project_name, project_name, PROJECT_REPOSITORY, code_time, svn_number)
     playbook_path = "/etc/ansible/roles/syzm.yml"
     deploy_command = """%s %s --tags %s --extra-vars "%s" """ % (ansible_path, playbook_path, tags_name, other_vars)
+    print deploy_command
     code_deploy = Popen(deploy_command, shell=True, stdout=PIPE, stderr=PIPE)
     stdout, stderr = code_deploy.communicate()
     print stdout
@@ -240,7 +242,7 @@ def rollbackdeploy(svn_number, project_name, tags_name):
 def check_arg(args=None):
     parser = argparse.ArgumentParser(description="EG: '%(prog)s'  deploy or rollback syzm test")
     parser.add_argument('-n', '--number', default='latest', help='input svn number')
-    parser.add_argument('-p', '--project', default='web', help='input project name')
+    parser.add_argument('-p', '--project', choices=['itsupport'], help='input project name')
     parser.add_argument('-o', '--operate', choices=['rollback', 'deploy'])
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
