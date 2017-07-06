@@ -4,17 +4,17 @@
 # Author-Email: liuyulong@co-mall.com
 
 
-import sys
-from datetime import datetime
-import subprocess
-from subprocess import Popen, PIPE
 import argparse
-import os
-import shutil
-import zipfile
 import logging
 import logging.config
-
+import os
+import shutil
+import subprocess
+import sys
+import zipfile
+from datetime import datetime
+from subprocess import Popen, PIPE
+import static_deploy
 
 # jenkins 工作目录
 # JENKINS_WORKBASW = "/software/Jenkins_Home/jobs/syzm_test/workspace"
@@ -260,9 +260,13 @@ def main():
         messages = "deploy svn number:%s-deploy project:%s" % (args.number, args.project)
         recordlog().info(messages)
         codeupdate(number=args.number)
-        codewar(version=args.number, project_name=args.project, code_time=CODE_TIME)
-        pushproject(project_name=args.project)
-        deployproject(project_name=args.project, code_time=CODE_TIME, svn_number=args.number, tags_name=args.operate)
-
+        if args.project != 'wap':
+            codewar(version=args.number, project_name=args.project, code_time=CODE_TIME)
+            pushproject(project_name=args.project)
+            deployproject(project_name=args.project, code_time=CODE_TIME, svn_number=args.number, tags_name=args.operate)
+        else:
+            static_deploy.handlestaticfiles(version=args.number, project_name=args.project, code_time=CODE_TIME)
+            pushproject(project_name=args.project)
+            deployproject(project_name=args.project, code_time=CODE_TIME, svn_number=args.number, tags_name=args.operate)
 if __name__ == '__main__':
     main()
