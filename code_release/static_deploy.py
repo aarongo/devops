@@ -43,4 +43,5 @@ def handlestaticfiles(version, project_name, code_time):
         try:
             shutil.copytree(src=src_path, dst=dest_path)
         except OSError:
-            pass
+            shutil.rmtree(path=dest_path)
+            shutil.copytree(src=src_path, dst=dest_path)

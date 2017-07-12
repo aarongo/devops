@@ -3,6 +3,11 @@
 # Author: "Edward.Liu"
 # Author-Email: liuyulong@co-mall.com
 
+"""
+千品猫项目使用, 先编译基础依赖, 在根据项目进行编译,提取对应项目文件
+"""
+
+
 
 import sys
 from datetime import datetime

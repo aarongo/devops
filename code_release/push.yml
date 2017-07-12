@@ -1,8 +1,12 @@
 ---
 - hosts: "{{ hosts }}"
   tasks:
+    - name: create remote server project_registory
+      file:
+        path: "{{ dest_dir }}"
+        state: directory
+        mode: 0755
     - name: push project files to Remote Server
       synchronize:
         src: "{{ src_dir }}"
         dest: "{{ dest_dir }}"
-
