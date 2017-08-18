@@ -25,7 +25,7 @@ import sys
 import zipfile
 from datetime import datetime
 from subprocess import Popen, PIPE
-import static_deploy
+
 
 # jenkins 工作目录
 # JENKINS_WORKBASW = "/software/Jenkins_Home/jobs/syzm_test/workspace"
@@ -298,18 +298,10 @@ def main():
             args.number, args.project)
         recordlog().info(messages)
         codeupdate(number=args.number)
-        if args.project != 'wap':
-            codewar(version=args.number,
-                    project_name=args.project, code_time=CODE_TIME)
-            pushproject(project_name=args.project)
-            deployproject(project_name=args.project, code_time=CODE_TIME,
-                          svn_number=args.number, tags_name=args.operate)
-        else:
-            if codeexport() == 0:
-                static_deploy.handlestaticfiles(
-                    version=args.number, project_name=args.project, code_time=CODE_TIME)
-                pushproject(project_name=args.project)
-                deployproject(project_name=args.project, code_time=CODE_TIME,
-                              svn_number=args.number, tags_name=args.operate)
+        codewar(version=args.number,
+                project_name=args.project, code_time=CODE_TIME)
+        pushproject(project_name=args.project)
+        deployproject(project_name=args.project, code_time=CODE_TIME,
+                      svn_number=args.number, tags_name=args.operate)
 if __name__ == '__main__':
     main()
