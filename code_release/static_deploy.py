@@ -31,7 +31,7 @@ def handlestaticfiles(version, project_name, code_time):
     # 静态资源项目文件处理
     # 项目名称
     CODE_WAR_NAME = "sy-cybershop-%s-3.1.1-SNAPSHOT" % project_name
-    PROJECT_PATH = "%s/%s/%s/%s" % (PROJECT_REPOSITORY, code_time, version, CODE_WAR_NAME)
+    PROJECT_PATH = "%s/%s/%s/%s/%s" % (PROJECT_REPOSITORY, project_name, code_time, version, CODE_WAR_NAME)
     if not os.path.exists(PROJECT_PATH):
         os.makedirs(PROJECT_PATH)
     # 处理静态资源文件

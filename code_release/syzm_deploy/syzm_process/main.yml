@@ -1,57 +1,12 @@
 ---
-# 定义重启服务
 - name: restart tomcat {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }} -d restart"
+  shell: "nohup ./syzm_{{ project_name }}.py -d restart"
   args:
     chdir: "{{ script_directory }}"
-  when: project_name == "rest-api"
-
-
-- name: restart tomcat {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }} -d restart &"
-  args:
-    chdir: "{{ script_directory }}"
-  when: project_name == "web"
-
-
-- name: restart tomcat {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }} -d restart &"
-  args:
-    chdir: "{{ script_directory }}"
-  when: project_name == "dubbo-index"
-
-
-- name: restart tomcat {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }} -d restart &"
-  args:
-    chdir: "{{ script_directory }}"
-  when: project_name == "dubbo-price"
-
- 
-- name: restart tomcat {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }} -d restart &"
-  args:
-    chdir: "{{ script_directory }}"
-  when: project_name == "dps"
-
-
-- name: restart tomcat {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }} -d restart &"
-  args:
-    chdir: "{{ script_directory }}"
-  when: project_name == "wap"
-
-
-- name: restart tomcat {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }} -d restart"
-  args:
-    chdir: "{{ script_directory }}"
-  when: project_name == "itsupport"
-
 
 
 - name: tomcat status {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }} -d status &"
+  shell: "nohup ./{{ project_name }}.py -d status &"
   args:
     chdir: "{{ script_directory }}"
   register: status_code

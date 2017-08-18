@@ -3,7 +3,6 @@
 deploy_directory: "/software/deploy_{{ project_name }}"
 # 部署的项目名称
 deploy_project_name: "sy-cybershop-{{ project_name }}-3.1.1-SNAPSHOT"
-# itsupport 项目名称
 itsupport_name : "cybershop-{{ project_name }}-0.0.1-SNAPSHOT"
 # 项目总存放位置
 project_repository: "{{ repository }}"
@@ -18,7 +17,5 @@ project_static: "/software/syzm_static/picture"
 mount_path: "{{ deploy_directory }}/{{ deploy_project_name }}/assets"
 # 挂载名称
 mount_name: "upload"
-# 单独处理rest-api或者web时重新推送源文件导致图片软连接丢失问题
-static_directory: "assets/{{ mount_name }}"
-restapi_directory: "/software/deploy_rest-api/sy-cybershop-rest-api-3.1.1-SNAPSHOT"
-web_directory: "/software/deploy_web/sy-cybershop-web-3.1.1-SNAPSHOT"
+# 定时任务处理-- web
+run_crontab_node_path: "{{ deploy_directory }}/{{ deploy_project_name }}/WEB-INF/classes"

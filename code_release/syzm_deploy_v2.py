@@ -15,7 +15,6 @@
 """
 
 
-
 import argparse
 import logging
 import logging.config
@@ -103,9 +102,11 @@ def codeexport():
     if not os.path.exists(CODE_EXPORT):
         os.makedirs(CODE_EXPORT)
     # 检出 SVN 工作目录
-    export_command = "svn export %s %s/%s" % (CODE_WORKSPACE, CODE_EXPORT, CODE_EXPORT_NAME)
+    export_command = "svn export %s %s/%s" % (
+        CODE_WORKSPACE, CODE_EXPORT, CODE_EXPORT_NAME)
     FNULL = open(os.devnull, 'w')
-    ret_code = subprocess.call(export_command, shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
+    ret_code = subprocess.call(
+        export_command, shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
     if ret_code == 0:
         messages = "code export success"
         recordlog().info(messages)
@@ -168,7 +169,8 @@ def codewar(version, project_name, code_time):
         print "\033[32m项目包处理.请等待...........\033[0m"
         # 项目名称
         CODE_WAR_NAME = "sy-cybershop-%s-3.1.1-SNAPSHOT" % project_name
-        PROJECT_PATH = "%s/%s/%s/%s/%s" % (PROJECT_REPOSITORY, project_name, code_time, version, CODE_WAR_NAME)
+        PROJECT_PATH = "%s/%s/%s/%s/%s" % (PROJECT_REPOSITORY,
+                                           project_name, code_time, version, CODE_WAR_NAME)
         if not os.path.exists(PROJECT_PATH):
             os.makedirs(PROJECT_PATH)
         # 项目包生成路径
@@ -192,7 +194,8 @@ def pushproject(project_name):
     print "\033[32m等待项目文件推送......\033[0m"
     # 使用ansible rsync模块直接推送到远端
     push_project_directory = "%s/%s" % (PROJECT_REPOSITORY, project_name)
-    push_command = """ansible-playbook /etc/ansible/roles/push_v1.yml --extra-vars "hosts=%s src_dir=%s dest_dir=%s" """ % (project_name, push_project_directory, PROJECT_REPOSITORY)
+    push_command = """ansible-playbook /etc/ansible/roles/push_v1.yml --extra-vars "hosts=%s src_dir=%s dest_dir=%s" """ % (
+        project_name, push_project_directory, PROJECT_REPOSITORY)
     code_push = Popen(push_command, shell=True, stdout=PIPE, stderr=PIPE)
     stdout, stderr = code_push.communicate()
     messages = "project push to remote Server success "
@@ -206,9 +209,11 @@ def deployproject(project_name, code_time, svn_number, tags_name):
     # ansible 处理软连接、重启项目、检测（脚本输出）项目状态
     ansible_path = "ansible-playbook"
     repository_path = "%s/%s" % (PROJECT_REPOSITORY, project_name)
-    other_vars = "hosts=%s project_name=%s repository=%s time=%s svn_number=%s" % (project_name, project_name, repository_path, code_time, svn_number)
+    other_vars = "hosts=%s project_name=%s repository=%s time=%s svn_number=%s" % (
+        project_name, project_name, repository_path, code_time, svn_number)
     playbook_path = "/etc/ansible/roles/syzm.yml"
-    deploy_command = """%s %s --tags %s --extra-vars "%s" """ % (ansible_path, playbook_path, tags_name, other_vars)
+    deploy_command = """%s %s --tags %s --extra-vars "%s" """ % (
+        ansible_path, playbook_path, tags_name, other_vars)
     code_deploy = Popen(deploy_command, shell=True, stdout=PIPE, stderr=PIPE)
     stdout, stderr = code_deploy.communicate()
     print stdout
@@ -248,10 +253,13 @@ def rollbackdeploy(svn_number, project_name, tags_name):
             code_time = checkdeploy()[number]['d_time']
             ansible_path = "ansible-playbook"
             repository_path = "%s/%s" % (PROJECT_REPOSITORY, project_name)
-            other_vars = "hosts=%s project_name=%s repository=%s time=%s svn_number=%s" % (project_name, project_name, repository_path, code_time, svn_number)
+            other_vars = "hosts=%s project_name=%s repository=%s time=%s svn_number=%s" % (
+                project_name, project_name, repository_path, code_time, svn_number)
             playbook_path = "/etc/ansible/roles/syzm.yml"
-            rollback_command = """%s %s --tags %s --extra-vars "%s" """ % (ansible_path, playbook_path, tags_name, other_vars)
-            rollback_code = Popen(rollback_command, shell=True, stdout=PIPE, stderr=PIPE)
+            rollback_command = """%s %s --tags %s --extra-vars "%s" """ % (
+                ansible_path, playbook_path, tags_name, other_vars)
+            rollback_code = Popen(
+                rollback_command, shell=True, stdout=PIPE, stderr=PIPE)
             stdout, stderr = rollback_code.communicate()
             print stdout
             if rollback_code.returncode == 0:
@@ -265,10 +273,13 @@ def rollbackdeploy(svn_number, project_name, tags_name):
 def check_arg(args=None):
     parser = argparse.ArgumentParser(
         description="EG: '%(prog)s'  deploy or rollback syzm test")
-    parser.add_argument('-n', '--number', default='latest', help='input svn number')
-    parser.add_argument('-p', '--project', choices=['web', 'rest-api', 'dubbo-index', 'dubbo-price', 'wap', 'dps'], help='input project name')
+    parser.add_argument('-n', '--number', default='latest',
+                        help='input svn number')
+    parser.add_argument('-p', '--project', choices=[
+                        'web', 'rest-api', 'dubbo-index', 'dubbo-price', 'wap', 'dps'], help='input project name')
     parser.add_argument('-o', '--operate', choices=['rollback', 'deploy'])
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
+    parser.add_argument('-v', '--version', action='version',
+                        version='%(prog)s 1.0')
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -288,13 +299,17 @@ def main():
         recordlog().info(messages)
         codeupdate(number=args.number)
         if args.project != 'wap':
-            codewar(version=args.number, project_name=args.project, code_time=CODE_TIME)
+            codewar(version=args.number,
+                    project_name=args.project, code_time=CODE_TIME)
             pushproject(project_name=args.project)
-            deployproject(project_name=args.project, code_time=CODE_TIME, svn_number=args.number, tags_name=args.operate)
+            deployproject(project_name=args.project, code_time=CODE_TIME,
+                          svn_number=args.number, tags_name=args.operate)
         else:
             if codeexport() == 0:
-                static_deploy.handlestaticfiles(version=args.number, project_name=args.project, code_time=CODE_TIME)
+                static_deploy.handlestaticfiles(
+                    version=args.number, project_name=args.project, code_time=CODE_TIME)
                 pushproject(project_name=args.project)
-                deployproject(project_name=args.project, code_time=CODE_TIME, svn_number=args.number, tags_name=args.operate)
+                deployproject(project_name=args.project, code_time=CODE_TIME,
+                              svn_number=args.number, tags_name=args.operate)
 if __name__ == '__main__':
     main()

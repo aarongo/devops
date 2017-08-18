@@ -1,4 +1,10 @@
 ---
+- name: for change soft link check
+  file:
+    src: "{{ use_project }}"
+    dest: "{{ deploy_directory }}/{{ deploy_project_name }}"
+    state: absent
+
 - name: change soft link for process {{ project_name }}
   file:
     src: "{{ use_project }}"
@@ -19,7 +25,7 @@
     path: "{{ mount_path }}"
     state: directory
     mode: 0755
-  when: project_name == "rest-api"
+  when: project_name == "rest-api" or project_name == "wxshop"
 
 
 - name: check static upload directory
@@ -29,12 +35,18 @@
   when: project_name == "web"
 
 
-  - name: change static link for process {{ project_name }}
+- name: change static link for process {{ project_name }}
   file:
     src: "{{ project_static }}"
     dest: "{{ mount_path }}/{{ mount_name }}"
     state: link
-  when: project_name == "web" or project_name == "rest-api"
+  when: project_name == "web" or project_name == "rest-api" or project_name == "rest-api"
+
+
+# 处理定时任务只有一台服务器执行
+- name: include diff files for {{ project_name }}
+  include: diff/main.yml
+
 
 - name: include syzm_process main
   include: syzm_process/main.yml
