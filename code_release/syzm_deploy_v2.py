@@ -166,7 +166,7 @@ def codebuild():
 # 文件处理
 def codewar(version, project_name, code_time):
     if codebuild() == 0:
-        print "\033[32m项目包处理.请等待...........\033[0m"
+        print "\033[32m项目包(%s)处理.请等待...........\033[0m" % project_name
         # 项目名称
         CODE_WAR_NAME = "sy-cybershop-%s-3.1.1-SNAPSHOT" % project_name
         PROJECT_PATH = "%s/%s/%s/%s/%s" % (PROJECT_REPOSITORY,
