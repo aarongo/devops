@@ -1,0 +1,19 @@
+---
+# vars for syzm_config Management
+WAP_NGINX_SOURCE_CONF_PATH: "/software/workspace/config_data/config_hooks/wap/nginx"
+WX_NGINX_SOURCE_CONF_PATH: "/software/workspace/config_data/config_hooks/wxshop/nginx"
+PICTURE_NGINX_SOURCE_CONF_PATH: "/software/workspace/config_data/config_hooks/picture/nginx"
+REST_API_NGINX_SOURCE_CONF_PATH: "/software/workspace/config_data/config_hooks/rest-api/nginx"
+NGINX_SOURCE_CONF_NAME: "nginx.conf.j2"
+NGINX_DEST_CONF_PATH: "/software/nginx/conf"
+NGINX_DEST_CONF_NAME: "nginx.conf"
+# 配置文件调用
+REST_API_HOST: 120.77.133.150
+WAP_PORT: 8090
+WX_PORT: 8090
+WAP_FQ: "ht.m.cdfgsanya.com"
+WX_FQ: "ht.wx.cdfgsanya.com"
+
+# restapi调用
+REST_API_PORT: 8080
+

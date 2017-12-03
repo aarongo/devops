@@ -1,0 +1,39 @@
+---
+# for syzm aliyun config  Management
+- name: syzm wap config update
+  template:
+    src: "{{ WAP_NGINX_SOURCE_CONF_PATH }}/{{ NGINX_SOURCE_CONF_NAME }}"
+    dest: "{{ NGINX_DEST_CONF_PATH }}/{{ NGINX_DEST_CONF_NAME }}"
+    mode: 0600
+  register: pinpoint_result
+  when: hosts_run == 'pinpoint'
+
+- name: syzm wxshop config update
+  template:
+    src: "{{ WX_NGINX_SOURCE_CONF_PATH }}/{{ NGINX_SOURCE_CONF_NAME }}"
+    dest: "{{ NGINX_DEST_CONF_PATH }}/{{ NGINX_DEST_CONF_NAME }}"
+    mode: 0600
+  register: wxshop_result
+  when: hosts_run == 'wxshop'
+
+- name: syzm picture config update
+  template:
+    src: "{{ PICTURE_NGINX_SOURCE_CONF_PATH }}/{{ NGINX_SOURCE_CONF_NAME }}"
+    dest: "{{ NGINX_DEST_CONF_PATH }}/{{ NGINX_DEST_CONF_NAME }}"
+    mode: 0600
+  register: picture_result
+  when: hosts_run == 'picture'
+
+- name: syzm restapi config update
+  template:
+    src: "{{ REST_API_NGINX_SOURCE_CONF_PATH }}/{{ NGINX_SOURCE_CONF_NAME }}"
+    dest: "{{ NGINX_DEST_CONF_PATH }}/{{ NGINX_DEST_CONF_NAME }}"
+    mode: 0600
+  register: restapi_result
+  when: hosts_run == 'rest-api'
+
+- name: reload nginx conf
+  shell: /software/nginx/sbin/nginx -s reload
+  args:
+    chdir: /software/nginx/sbin/
+  when: (pinpoint_result.changed or wxshop_result.changed or picture_result or restapi_result.changed)

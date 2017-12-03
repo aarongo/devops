@@ -1,0 +1,6 @@
+---
+- hosts: "{{ hosts_run }}"
+  roles:
+    - role: gkwc_config
+      backend_hosts: "{{groups['backedn']}}"
+      merchat_hosts: "{{groups['merchat']}}"

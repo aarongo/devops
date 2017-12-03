@@ -1,0 +1,5 @@
+---
+- hosts: {{ hosts_run }}
+  roles:
+    - role: nginx_config
+    wap_hosts: "{{groups['wap']}}"

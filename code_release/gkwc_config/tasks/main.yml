@@ -1,0 +1,39 @@
+---
+# for syzm aliyun config  Management
+- name: gkwc front config update
+  template:
+    src: "{{ FRONT_NGINX_SOURCE_CONF_PATH }}/{{ NGINX_SOURCE_CONF_NAME }}"
+    dest: "{{ NGINX_DEST_CONF_PATH }}/{{ NGINX_DEST_CONF_NAME }}"
+    mode: 0755
+  register: front_result
+  when: hosts_run == 'front'
+
+- name: gkwc backend config update
+  template:
+    src: "{{ BACKEND_NGINX_SOURCE_CONF_PATH }}/{{ NGINX_SOURCE_CONF_NAME }}"
+    dest: "{{ NGINX_DEST_CONF_PATH }}/{{ NGINX_DEST_CONF_NAME }}"
+    mode: 0755
+  register: backend_result
+  when: hosts_run == 'backend'
+
+- name: gkwc picture config update
+  template:
+    src: "{{ PICTURE_NGINX_SOURCE_CONF_PATH }}/{{ NGINX_SOURCE_CONF_NAME }}"
+    dest: "{{ NGINX_DEST_CONF_PATH }}/{{ NGINX_DEST_CONF_NAME }}"
+    mode: 0755
+  register: picture_result
+  when: hosts_run == 'picture'
+
+- name: gkwc MERCHAT config update
+  template:
+    src: "{{ MERCHAT_NGINX_SOURCE_CONF_PATH }}/{{ NGINX_SOURCE_CONF_NAME }}"
+    dest: "{{ NGINX_DEST_CONF_PATH }}/{{ NGINX_DEST_CONF_NAME }}"
+    mode: 0755
+  register: merchat_result
+  when: hosts_run == 'merchat'
+
+- name: reload nginx conf
+  shell: ./nginx -s reload
+  args:
+    chdir: /software/nginx/sbin/
+  when: (front_result.changed or backend_result.changed or picture_result or merchat_result.changed)

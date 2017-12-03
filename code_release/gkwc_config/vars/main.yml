@@ -1,0 +1,16 @@
+---
+# vars for syzm_config Management
+FRONT_NGINX_SOURCE_CONF_PATH: "/software/workspace/project-local/project/front/nginx"
+BACKEND_NGINX_SOURCE_CONF_PATH: "/software/workspace/project-local/project/backend/nginx"
+PICTURE_NGINX_SOURCE_CONF_PATH: "/software/workspace/project-local/project/picture/nginx"
+MERCHAT_NGINX_SOURCE_CONF_PATH: "/software/workspace/project-local/project/merchat/nginx"
+NGINX_SOURCE_CONF_NAME: "nginx.conf.j2"
+NGINX_DEST_CONF_PATH: "/software/nginx/conf"
+NGINX_DEST_CONF_NAME: "nginx.conf"
+
+# Front
+FRONT_PORT: 8080
+# BackEnd
+BACKEND_PORT: 8080
+# merchat
+MERCHAT_PORT: 8080

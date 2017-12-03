@@ -1,6 +1,6 @@
 ---
 - name: restart tomcat {{ project_name }}
-  shell: "nohup ./syzm_{{ project_name }}.py -d restart"
+  shell: "nohup ./gkwc_{{ project_name }}.py -d restart"
   args:
     chdir: "{{ script_directory }}"
 

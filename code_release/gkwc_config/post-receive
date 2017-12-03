@@ -1,0 +1,7 @@
+#!/bin/sh
+cd /software/workspace/project-local/project  || exit
+echo ${GIT_DIR}
+unset GIT_DIR
+/usr/bin/git  pull
+echo "update nginx conf "
+/software/script/gkwc_auto.py

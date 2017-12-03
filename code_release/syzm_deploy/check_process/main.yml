@@ -1,0 +1,182 @@
+---
+- name: process status wxshop
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8081/check.html"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: "'WXSHOP Server is Running!'  in list_of_components.content"
+
+  retries: 6
+
+  delay: 30
+
+  when: project_name == "wxshop"
+
+- debug: msg="return code is {{ list_of_components.status }} And WXSHOP Server is Running!"
+
+  when: ("'WXSHOP Server is Running!'  in list_of_components.content") and (project_name == "wxshop")
+
+- name: process status rest-api
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8080/check.html"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: "'REST-API Server is Running!'  in list_of_components.content"
+
+  retries: 6
+
+  delay: 30
+
+  when: project_name == "rest-api"
+
+- debug: msg="return code is {{ list_of_components.status }} And REST-API Server is Running!"
+
+  when: ("'REST-API Server is Running!'  in list_of_components.content") and (project_name == "rest-api")
+
+- name: process status web
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8090/check.html"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: "'WEB Server is Running!'  in list_of_components.content"
+
+  retries: 6
+
+  delay: 30
+
+  when: project_name == "web"
+
+- debug: msg="return code is {{ list_of_components.status }} And WEB Server is Running!"
+
+  when: ("'WEB Server is Running!'  in list_of_components.content") and (project_name == "web")
+
+- name: process status wap
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8080/check.html"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: "'WAP Server is Running!'  in list_of_components.content"
+
+  retries: 6
+
+  delay: 30
+
+  when: project_name == "wap"
+
+- debug: msg="return code is {{ list_of_components.status }} And WAP Server is Running!"
+
+  when: ("'WAP Server is Running!'  in list_of_components.content") and (project_name == "wap")
+
+- name: process status dps
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8090/check.html"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: "'DPS Server is Running!'  in list_of_components.content"
+
+  retries: 6
+
+  delay: 30
+
+  when: project_name == "dps"
+
+- debug: msg="return code is {{ list_of_components.status }} And DPS Server is Running!"
+
+  when: ("'DPS Server is Running!'  in list_of_components.content") and (project_name == "dps")
+
+- name: process status dubbo-index
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8080/check.html"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: "'DUBBO-INDEX Server is Running!'  in list_of_components.content"
+
+  retries: 6
+
+  delay: 30
+
+  when: project_name == "dubbo-index"
+
+- debug: msg="return code is {{ list_of_components.status }} And DUBBO-INDEX Server is Running!"
+
+  when: ("'DUBBO-INDEX Server is Running!'  in list_of_components.content") and (project_name == "dubbo-index")
+
+- name: process status dubbo-price
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8180/check.html"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: "'DUBBO-PRICE Server is Running!'  in list_of_components.content"
+
+  retries: 6
+
+  delay: 30
+
+  when: project_name == "dubbo-price"
+
+- debug: msg="return code is {{ list_of_components.status }} And DUBBO-PRICE Server is Running!"
+
+  when: ("'DUBBO-PRICE Server is Running!'  in list_of_components.content") and (project_name == "dubbo-price")
