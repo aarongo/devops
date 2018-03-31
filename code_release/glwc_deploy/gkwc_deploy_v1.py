@@ -28,7 +28,7 @@ from subprocess import Popen, PIPE
 
 # http://124.193.192.93:10080/gkshop/code.git
 # jenkins 工作目录
-# JENKINS_WORKBASW = "/software/Jenkins_Home/jobs/glwc_online/workspace"
+# JENKINS_WORKBASW = "/software/Jenkins_Home/jobs/gkwc_online/workspace"
 # code 存放位置
 CODE_WORKSPACE = "/software/git_code_registroy/code"
 # 代码 export 目录
@@ -91,11 +91,11 @@ def swith_branch(branch_name):
         sys.stdout.flush()
     stdout, stderr = branch_swith.communicate()
     if branch_swith.returncode == 0:
-        print "\033[32mCheckout glwc_online branch: %s Is successful\033[0m" % branch_name
+        print "\033[32mCheckout gkwc_online branch: %s Is successful\033[0m" % branch_name
         messages = "update code success"
         recordlog().info(messages)
     else:
-        print "\033[32mCheckout glwc_online branch: %s Is Failed\033[0m"
+        print "\033[32mCheckout gkwc_online branch: %s Is Failed\033[0m"
         print stderr
         sys.exit(1)
 
@@ -123,11 +123,11 @@ def codeupdate():
             sys.stdout.flush()
         stdout, stderr = code_update.communicate()
         if (code_update.returncode == 0):
-            print "\033[32mUpdate glwc_online Is successful\033[0m"
+            print "\033[32mUpdate gkwc_online Is successful\033[0m"
             messages = "update code success"
             recordlog().info(messages)
         else:
-            print "\033[32mUpdate glwc_online Is Failed\033[0m"
+            print "\033[32mUpdate gkwc_online Is Failed\033[0m"
             print stderr
             sys.exit(1)
     except KeyboardInterrupt:
@@ -216,11 +216,11 @@ def codebuild(branch_name):
                 time2, FMT) - datetime.strptime(time1, FMT)
             if build_status.returncode == 0:
                 print "\033[33m编译用时:\033[0m" + "%s" % time_diff
-                print "\033[32mBuild glwc_online Is successful\033[0m"
+                print "\033[32mBuild gkwc_online Is successful\033[0m"
                 messages = "build code success"
                 recordlog().info(messages)
             else:
-                print "\033[32mBuild glwc_online Is Failed\033[0m"
+                print "\033[32mBuild gkwc_online Is Failed\033[0m"
                 messages = "build code Failed"
                 recordlog().info(messages)
                 print stderr

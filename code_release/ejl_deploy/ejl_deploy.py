@@ -27,14 +27,12 @@ from datetime import datetime
 from subprocess import Popen, PIPE
 
 
-# jenkins 工作目录
-# JENKINS_WORKBASW = "/software/Jenkins_Home/jobs/syzm_test/workspace"
 # code 存放位置
-CODE_WORKSPACE = "/software/git_code_registroy/ld"
+CODE_WORKSPACE = "/software/git_code_registroy/core"
 # 代码 export 目录
 CODE_EXPORT = "/software/git_code_export"
 # 代码 export 名称
-CODE_EXPORT_NAME = "syzm_online"
+CODE_EXPORT_NAME = "ejl_test"
 # export 路径
 export_path = "%s/%s" % (CODE_EXPORT, CODE_EXPORT_NAME)
 # 编译后代码存放路径及推送目录
@@ -45,7 +43,7 @@ PROJECT_REPOSITORY = "/software/project_repository"
 def recordlog():
     loger_path = "/software/script/logger.conf"
     logging.config.fileConfig(loger_path)
-    logger = logging.getLogger("syzm")
+    logger = logging.getLogger("ejl")
     return logger
 
 
@@ -91,11 +89,11 @@ def swith_branch(branch_name):
         sys.stdout.flush()
     stdout, stderr = branch_swith.communicate()
     if branch_swith.returncode == 0:
-        print "\033[32mCheckout syzm_test branch: %s Is successful\033[0m" % branch_name
+        print "\033[32mCheckout ejl_test branch: %s Is successful\033[0m" % branch_name
         messages = "update code success"
         recordlog().info(messages)
     else:
-        print "\033[32mCheckout syzm_test branch: %s Is Failed\033[0m"
+        print "\033[32mCheckout ejl_test branch: %s Is Failed\033[0m"
         print stderr
         sys.exit(1)
 
@@ -123,11 +121,11 @@ def codeupdate():
             sys.stdout.flush()
         stdout, stderr = code_update.communicate()
         if (code_update.returncode == 0):
-            print "\033[32mUpdate syzm_online Is successful\033[0m"
+            print "\033[32mUpdate ejl_test Is successful\033[0m"
             messages = "update code success"
             recordlog().info(messages)
         else:
-            print "\033[32mUpdate syzm_online Is Failed\033[0m"
+            print "\033[32mUpdate ejl_test Is Failed\033[0m"
             print stderr
             sys.exit(1)
     except KeyboardInterrupt:
@@ -167,13 +165,25 @@ def codeexport(branch_name):
     return ret_code
 
 
+# 处理 front gulp 编译问题
+def gulp_handle():
+    source_dir_name = "/software/node_modules"
+    dest_dir_name = "%s/cybershop-front/src/main/websrc/node_modules" % export_path
+    shutil.copytree(source_dir_name, dest_dir_name)
+    if os.path.isdir(dest_dir_name):
+        return "OK"
+    else:
+        print "handle project front is Failed"
+        return "Failed"
+
+
 # 代码编译
 def codebuild(branch_name):
     try:
         if codeexport(branch_name=branch_name) == 0:
             time1 = datetime.now().strftime('%H:%M:%S')
             # 编译命令
-            CODE_BUILD_COMMAND = "mvn clean install -Pzmsy_online -Dmaven.test.skip=true"
+            CODE_BUILD_COMMAND = "mvn clean install -Ptest -Dmaven.test.skip=true"
             # 更换工作目录
             os.chdir(export_path)
             # 运行编译命令
@@ -204,11 +214,11 @@ def codebuild(branch_name):
                 time2, FMT) - datetime.strptime(time1, FMT)
             if build_status.returncode == 0:
                 print "\033[33m编译用时:\033[0m" + "%s" % time_diff
-                print "\033[32mBuild syzm_online Is successful\033[0m"
+                print "\033[32mBuild ejl_test Is successful\033[0m"
                 messages = "build code success"
                 recordlog().info(messages)
             else:
-                print "\033[32mBuild syzm_test Is Failed\033[0m"
+                print "\033[32mBuild ejl_test Is Failed\033[0m"
                 messages = "build code Failed"
                 recordlog().info(messages)
                 print stderr
@@ -217,19 +227,32 @@ def codebuild(branch_name):
         print "\033[32m 退出编译\033[0m"
 
 
+def project_name_handle(project_name):
+    p_name = ""
+    if project_name == "restapi" or project_name == "wxshop":
+        p_name = "mobile"
+    elif project_name == "erpdocke":
+        p_name = "api"
+    else:
+        p_name = project_name
+    return p_name
+
 # 文件处理
+
+
 def codewar(version, project_name, code_time):
     if codebuild(branch_name=version) == 0:
         print "\033[32m项目包(%s)处理.请等待...........\033[0m" % project_name
         # 项目名称
-        CODE_WAR_NAME = "sy-cybershop-%s-3.1.1-SNAPSHOT" % project_name
+        CODE_WAR_NAME = "cybershop-%s-0.0.1-SNAPSHOT" % project_name_handle(
+            project_name)
         PROJECT_PATH = "%s/%s/%s/%s/%s" % (PROJECT_REPOSITORY,
                                            project_name, code_time, version, CODE_WAR_NAME)
         if not os.path.exists(PROJECT_PATH):
             os.makedirs(PROJECT_PATH)
         # 项目包生成路径
         PROJECT_WAR_PATH = "%s/cybershop-%s/target/%s" % (
-            export_path, project_name, CODE_WAR_NAME) + ".war"
+            export_path, project_name_handle(project_name), CODE_WAR_NAME) + ".war"
         # 直接将项目包解压到项目目录
         try:
             zip_ref = zipfile.ZipFile(PROJECT_WAR_PATH, 'r')
@@ -249,8 +272,9 @@ def pushproject(project_name):
     print "\033[32m等待项目文件推送......\033[0m"
     # 使用ansible rsync模块直接推送到远端
     push_project_directory = "%s/%s" % (PROJECT_REPOSITORY, project_name)
-    push_command = """ansible-playbook /etc/ansible/roles/push_v1.yml --extra-vars "hosts=%s src_dir=%s dest_dir=%s" """ % (
+    push_command = """ansible-playbook /etc/ansible/roles/push.yml --extra-vars "hosts=%s src_dir=%s dest_dir=%s" """ % (
         project_name, push_project_directory, PROJECT_REPOSITORY)
+    print push_command
     code_push = Popen(push_command, shell=True, stdout=PIPE, stderr=PIPE)
     stdout, stderr = code_push.communicate()
     messages = "project push to remote Server success "
@@ -265,10 +289,11 @@ def deployproject(project_name, code_time, git_number, tags_name):
     ansible_path = "ansible-playbook"
     repository_path = "%s/%s" % (PROJECT_REPOSITORY, project_name)
     other_vars = "hosts=%s project_name=%s repository=%s time=%s git_number=%s" % (
-        project_name, project_name, repository_path, code_time, git_number)
-    playbook_path = "/etc/ansible/roles/syzm.yml"
+        project_name, project_name_handle(project_name), repository_path, code_time, git_number)
+    playbook_path = "/etc/ansible/roles/ejl_deploy.yml"
     deploy_command = """%s %s --tags %s --extra-vars "%s" """ % (
         ansible_path, playbook_path, tags_name, other_vars)
+    print deploy_command
     code_deploy = Popen(deploy_command, shell=True, stdout=PIPE, stderr=PIPE)
     stdout, stderr = code_deploy.communicate()
     print stdout
@@ -310,7 +335,7 @@ def rollbackdeploy(git_number, project_name, tags_name):
             repository_path = "%s/%s" % (PROJECT_REPOSITORY, project_name)
             other_vars = "hosts=%s project_name=%s repository=%s time=%s git_number=%s" % (
                 project_name, project_name, repository_path, code_time, git_number)
-            playbook_path = "/etc/ansible/roles/syzm.yml"
+            playbook_path = "/etc/ansible/roles/ejl.yml"
             rollback_command = """%s %s --tags %s --extra-vars "%s" """ % (
                 ansible_path, playbook_path, tags_name, other_vars)
             rollback_code = Popen(
@@ -324,11 +349,12 @@ def rollbackdeploy(git_number, project_name, tags_name):
 
 def check_arg(args=None):
     parser = argparse.ArgumentParser(
-        description="EG: '%(prog)s'  deploy or rollback syzm ht online")
-    parser.add_argument('-n', '--number', help='input git number')
+        description="EG: '%(prog)s'  deploy or rollback glwc ht online")
+    parser.add_argument(
+        '-n', '--number', help='input git number allow is none')
     parser.add_argument('-b', '--branch', help='input git branch')
     parser.add_argument('-p', '--project', choices=[
-                        'web', 'rest-api', 'dubbo-index', 'dubbo-price', 'wap', 'dps'], help='input project name')
+                        'web', 'restapi', 'wxshop', 'erpdocke'], help='input project name')
     parser.add_argument('-o', '--operate', choices=['rollback', 'deploy'])
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
@@ -350,7 +376,7 @@ def main():
         rollbackdeploy(git_number=number,
                        project_name=args.project, tags_name=args.operate)
     if args.operate == 'deploy':
-        messages = "deploy svn number:%s-deploy project:%s" % (
+        messages = "deploy git number:%s-deploy project:%s" % (
             number, args.project)
         recordlog().info(messages)
         swith_branch(branch_name=args.branch)

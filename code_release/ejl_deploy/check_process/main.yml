@@ -1,0 +1,76 @@
+---
+- name: process status web
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8090/login"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: list_of_components.status == 200
+
+  retries: 6
+
+  delay: 30
+
+
+- debug: msg="return code is {{ list_of_components.status }} And WEB Server is Running!"
+
+  when: (project_name == "web")
+
+- name: process status restapi
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8090/mobile/api/checkUpdate"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: list_of_components.status == 200
+
+  retries: 6
+
+  delay: 30
+
+
+- debug: msg="return code is {{ list_of_components.status }} And WEB Server is Running!"
+
+  when: (project_name == "restapi")
+
+
+- name: process status api
+
+  uri:
+
+    url="http://{{ ansible_default_ipv4.address }}:8090/serviceStatus/heartbeatCheck"
+
+    body_format=json
+
+    status_code=200
+
+    return_content=yes
+
+  register: list_of_components
+
+  until: list_of_components.status == 200
+
+  retries: 6
+
+  delay: 30
+
+
+- debug: msg="return code is {{ list_of_components.status }} And WEB Server is Running!"
+
+  when: (project_name == "api")

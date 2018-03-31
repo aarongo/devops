@@ -34,7 +34,7 @@ CODE_WORKSPACE = "/software/git_code_registroy/ld"
 # 代码 export 目录
 CODE_EXPORT = "/software/git_code_export"
 # 代码 export 名称
-CODE_EXPORT_NAME = "syzm_online"
+CODE_EXPORT_NAME = "syzm_test"
 # export 路径
 export_path = "%s/%s" % (CODE_EXPORT, CODE_EXPORT_NAME)
 # 编译后代码存放路径及推送目录
@@ -47,7 +47,6 @@ def recordlog():
     logging.config.fileConfig(loger_path)
     logger = logging.getLogger("syzm")
     return logger
-
 
 '''
 记录部署成功日志
@@ -154,8 +153,7 @@ def codeexport(branch_name):
     if not os.path.exists(export_path):
         os.makedirs(export_path)
     # 检出 SVN 工作目录
-    export_command = "/usr/bin/git archive %s | tar -x -C %s" % (
-        branch_name, export_path)
+    export_command = "/usr/bin/git archive %s | tar -x -C %s" % (branch_name, export_path)
     FNULL = open(os.devnull, 'w')
     # 更换工作目录
     os.chdir(CODE_WORKSPACE)
@@ -173,7 +171,7 @@ def codebuild(branch_name):
         if codeexport(branch_name=branch_name) == 0:
             time1 = datetime.now().strftime('%H:%M:%S')
             # 编译命令
-            CODE_BUILD_COMMAND = "mvn clean install -Pzmsy_online -Dmaven.test.skip=true"
+            CODE_BUILD_COMMAND = "mvn clean install -Pzmsy_test -Dmaven.test.skip=true"
             # 更换工作目录
             os.chdir(export_path)
             # 运行编译命令
@@ -328,7 +326,7 @@ def check_arg(args=None):
     parser.add_argument('-n', '--number', help='input git number')
     parser.add_argument('-b', '--branch', help='input git branch')
     parser.add_argument('-p', '--project', choices=[
-                        'web', 'rest-api', 'dubbo-index', 'dubbo-price', 'wap', 'dps'], help='input project name')
+                        'web', 'rest-api', 'dubbo-index', 'dubbo-price', 'wap', 'dps','front','wxshop'], help='input project name')
     parser.add_argument('-o', '--operate', choices=['rollback', 'deploy'])
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
@@ -350,16 +348,15 @@ def main():
         rollbackdeploy(git_number=number,
                        project_name=args.project, tags_name=args.operate)
     if args.operate == 'deploy':
-        messages = "deploy svn number:%s-deploy project:%s" % (
-            number, args.project)
+        messages = "deploy svn number:%s-deploy project:%s" % (number, args.project)
         recordlog().info(messages)
         swith_branch(branch_name=args.branch)
         codeupdate()
         codewar(version=number, project_name=args.project, code_time=CODE_TIME)
         pushproject(project_name=args.project)
-        deployproject(project_name=args.project, code_time=CODE_TIME,
-                      git_number=number, tags_name=args.operate)
+        deployproject(project_name=args.project, code_time=CODE_TIME, git_number=number, tags_name=args.operate)
 
-
+        
 if __name__ == '__main__':
     main()
+

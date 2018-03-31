@@ -1,0 +1,8 @@
+---
+- name: restart tomcat {{ project_name }}
+  shell: "nohup ./{{ project_name }}.py -d restart"
+  args:
+    chdir: "{{ script_directory }}"
+
+- name: include check url for deploy {{ project_name }}
+  include: check_process/main.yml
