@@ -10,16 +10,17 @@ import sys
 import zipfile
 from config_base import Read_Conf as readconfig
 from handle_git import Custom_Git as git
+import shutil
 
 
 class Maven_Build(object):
 
-    def __init__(self, deploy_time, conf=readconfig().o_conf()):
+    def __init__(self, git_number, branch_name, conf=readconfig().o_conf()):
         self.code_export = conf.get("repo", "repo_export_path")
         self.maven_environment = conf.get("build-options", "env")
         self.project_name = conf.get('will_deployed', 'name')
-        self.deploy_time = deploy_time
-        self.git_number = git().branch_version()
+        self.branch_name = branch_name
+        self.git_number = git_number
         self.repository = conf.get("repository", "path")
         # 生成部署文件的名称拼接
         self.head_name = "{0}".format(conf.get("project", "name"))
@@ -33,7 +34,7 @@ class Maven_Build(object):
         try:
             time1 = datetime.now().strftime('%H:%M:%S')
             # 编译命令
-            build_cmd = "{0}clean install -P{1} -Dmaven.test.skip=true".format(self.maven_bin, self.maven_environment)
+            build_cmd = "{0} clean install -P{1} -Dmaven.test.skip=true".format(self.maven_bin, self.maven_environment)
             # 更换工作目录
             os.chdir(self.code_export)
             # 运行编译命令
@@ -77,17 +78,19 @@ class Maven_Build(object):
         # 收集所有输出结果
         result = {}
 
+        print "\033[32m项目安装包处理.请等待...........\033[0m"
+
         for name in self.project_name.split(','):
-            print "\033[32m项目包(%s)处理.请等待...........\033[0m" % name
             # 项目包名称
             deploy_name = "{0}-{1}-{2}-{3}".format(self.head_name, name, self.version, self.snapshot)
-            # 项目部署文件存放位置
-            # save_path = "%s/%s/%s/%s/%s" % (self.repository, self.project_name, self.deploy_time, self.git_number, self.deploy_name)
-            save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, name, self.deploy_time, self.git_number, deploy_name)
+            # 项目部署文件存放位置--版本号唯一所以删除部署时间选项
+            save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, self.branch_name, self.git_number, name, deploy_name)
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
+            else:
+                shutil.rmtree(save_path)
             # 项目包生成路径
-            deploy_files_path = "%s/cybershop-%s/target/%s" % (self.code_export, name,  deploy_name) + ".war"
+            deploy_files_path = "%s/cybershop-%s/target/%s" % (self.code_export, name, deploy_name) + ".war"
             # 直接将项目包解压到项目目录
             try:
                 zip_ref = zipfile.ZipFile(deploy_files_path, 'r')
@@ -101,3 +104,10 @@ class Maven_Build(object):
 
         # 返回所有结果或者记录到日志中
         return result
+
+
+branch_name = sys.argv[1]
+git_number = git(branch_name).branch_version()
+run = Maven_Build(git_number, branch_name)
+run.Maven_Code_Build()
+print run.Files_Handle()

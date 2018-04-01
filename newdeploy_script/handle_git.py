@@ -8,14 +8,16 @@ from subprocess import STDOUT, call
 import shutil
 import os
 from config_base import Read_Conf as readconfig
+import sys
 
 
 class Custom_Git(object):
 
-    def __init__(self, config=readconfig().o_conf()):
+    def __init__(self, branch_name, config=readconfig().o_conf()):
+
+        self.branch_name = branch_name
 
         if config != 1:
-
             self.repo_path = config.get("repo", "repo_path")
 
             self.repo_export = config.get("repo", "repo_export_path")
@@ -35,10 +37,13 @@ class Custom_Git(object):
 
         version = self.client().log("--pretty=format:'%h'", "-1")
 
-        return version
+        # eval 将字符串str当成有效的表达式来求值并返回计算结果--去除返回结果中的引号
+        return eval(version.encode("utf-8"))
 
     # 切换分支
-    def branch_switch(self, branch_name):
+    def branch_switch(self):
+
+        print ("Checkout Branch {0}".format(self.branch_name))
 
         # 所有分支
         branches = self.client().branch()
@@ -47,25 +52,30 @@ class Custom_Git(object):
         default = "master"
 
         # 处理同一分支部署多次
-        if branch_name in branches:
+        if self.branch_name in branches:
+
+            # 此处是不是如果存在该分支只需要更新即可？？
+            print ("删除分支并且重新检出分支")
 
             """1. 首先切换成 Master 2. 更新 Master 分支 获取远端分支或者程序的更改 3. 删除输入的分支"""
             self.client().checkout(default)
 
-            self.client().branch("-D", branch_name)
+            self.client().branch("-D", self.branch_name)
 
             self.client().pull()
 
-            self.client().checkout(branch_name)
+            self.client().checkout(self.branch_name)
 
         else:
 
-            self.client().checkout(branch_name)
+            self.client().checkout(self.branch_name)
 
             self.client().pull()
 
     # 检出代码
-    def export_branch(self, branch_name):
+    def export_branch(self):
+
+        print ("Export Branch {0}".format(self.branch_name))
 
         if os.path.exists(self.repo_export):
             shutil.rmtree(self.repo_export)
@@ -74,7 +84,7 @@ class Custom_Git(object):
             os.makedirs(self.repo_export)
 
         # 检出 GIT 工作目录
-        export_command = "{0} archive {1} | tar -x -C {2}".format(self.git_bin, branch_name, self.repo_export)
+        export_command = "{0} archive {1} | tar -x -C {2}".format(self.git_bin, self.branch_name, self.repo_export)
 
         FNULL = open(os.devnull, 'w')
 
