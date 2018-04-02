@@ -11,6 +11,8 @@ import zipfile
 from config_base import Read_Conf as readconfig
 from handle_git import Custom_Git as git
 import shutil
+import yaml
+import logging.config
 
 
 class Maven_Build(object):
@@ -28,6 +30,18 @@ class Maven_Build(object):
         self.snapshot = "{0}".format(conf.get("project", "snapshot"))
         # 拼接完成
         self.maven_bin = conf.get("system", "mvn_bin")
+        # 日志文件存储位置与配置位置
+        self.conf_path = conf.get("log_path", "conf_path")
+
+    # 记录日志,后续部署调用该日志进行项目部署
+    def write_log(self):
+        log_conf = "{0}/logging.yml".format(self.conf_path)
+        with open(log_conf, 'r') as f_conf:
+            dict_conf = yaml.load(f_conf)
+        logging.config.dictConfig(dict_conf)
+
+        logger = logging.getLogger('builded')
+        return logger
 
     # 代码编译
     def Maven_Code_Build(self):
@@ -83,8 +97,8 @@ class Maven_Build(object):
         for name in self.project_name.split(','):
             # 项目包名称
             deploy_name = "{0}-{1}-{2}-{3}".format(self.head_name, name, self.version, self.snapshot)
-            # 项目部署文件存放位置--版本号唯一所以删除部署时间选项
-            save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, self.branch_name, self.git_number, name, deploy_name)
+            # 项目部署文件存放位置--项目推送过程中需要推送到2级目录
+            save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, name, self.branch_name, self.git_number, deploy_name)
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
             else:
@@ -101,13 +115,12 @@ class Maven_Build(object):
                 print "\033[31m%s Is Not Exists Please Run bulid\033[0m" % deploy_files_path
 
             result[name] = save_path
-
         # 返回所有结果或者记录到日志中
-        return result
+        self.write_log().info(result)
 
 
 branch_name = sys.argv[1]
 git_number = git(branch_name).branch_version()
 run = Maven_Build(git_number, branch_name)
 run.Maven_Code_Build()
-print run.Files_Handle()
+run.Files_Handle()
