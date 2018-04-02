@@ -16,7 +16,7 @@
     path: "{{ mount_path }}"
     state: directory
     mode: 0755
-  when: project_name == "restapi"
+  when: (hosts == "restapi") or (hosts == "teamshop")
 
   when: project_name == "rest-api" or project_name == "wxshop"
 - name: check static upload directory

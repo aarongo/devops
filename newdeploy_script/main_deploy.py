@@ -22,7 +22,7 @@ def push_deploy(hosts, name, tags):
 def check_arg(args=None):
     parser = argparse.ArgumentParser(description="EG: '%(prog)s'  build maven project")
     parser.add_argument('-p', '--project_name', choices=['wx', 'teamshop', 'restapi', 'erpdocke', 'web'], help='deploy project name')
-    parser.add_argument('-t', '--tags', help='deploy way')
+    parser.add_argument('-t', '--tags', choices=['deploy', 'rollback'], help='deploy way')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
     if len(sys.argv) == 1:
         parser.print_help()
