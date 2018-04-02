@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*- 
 # Author EdwardLiu
 
+"""
+项目 版本库 公用操作类
+"""
+
 
 import git
 from subprocess import STDOUT, call

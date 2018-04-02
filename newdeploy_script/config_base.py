@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*- 
 # Author EdwardLiu
 
+"""
+项目脚本配置文件读取
+"""
+
 import ConfigParser
 import os
 
