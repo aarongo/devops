@@ -17,12 +17,11 @@ import logging.config
 
 class Maven_Build(object):
 
-    def __init__(self, git_number, branch_name, conf=readconfig().o_conf()):
+    def __init__(self, name, conf=readconfig().o_conf()):
         self.code_export = conf.get("repo", "repo_export_path")
         self.maven_environment = conf.get("build-options", "env")
         self.project_name = conf.get('will_deployed', 'name')
-        self.branch_name = branch_name
-        self.git_number = git_number
+        self.branch_name = name
         self.repository = conf.get("repository", "path")
         # 生成部署文件的名称拼接
         self.head_name = "{0}".format(conf.get("project", "name"))
@@ -92,13 +91,16 @@ class Maven_Build(object):
         # 收集所有输出结果
         result = {}
 
+        # 版本信息
+        git_number = git(self.branch_name).branch_version()
+
         print "\033[32m项目安装包处理.请等待...........\033[0m"
 
         for name in self.project_name.split(','):
             # 项目包名称
             deploy_name = "{0}-{1}-{2}-{3}".format(self.head_name, name, self.version, self.snapshot)
             # 项目部署文件存放位置--项目推送过程中需要推送到2级目录
-            save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, name, self.branch_name, self.git_number, deploy_name)
+            save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, name, self.branch_name, git_number, deploy_name)
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
             else:
@@ -120,7 +122,6 @@ class Maven_Build(object):
 
 
 branch_name = sys.argv[1]
-git_number = git(branch_name).branch_version()
-run = Maven_Build(git_number, branch_name)
+run = Maven_Build(branch_name)
 run.Maven_Code_Build()
 run.Files_Handle()
