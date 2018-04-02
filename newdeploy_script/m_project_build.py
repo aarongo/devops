@@ -119,9 +119,3 @@ class Maven_Build(object):
             result[name] = save_path
         # 返回所有结果或者记录到日志中
         self.write_log().info(result)
-
-
-branch_name = sys.argv[1]
-run = Maven_Build(branch_name)
-run.Maven_Code_Build()
-run.Files_Handle()
