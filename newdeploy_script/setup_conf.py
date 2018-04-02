@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*- 
 # Author EdwardLiu
 
+"""
+初始化项目配置文件-- project.log
+"""
+
 
 import ConfigParser
 import os
@@ -11,13 +15,14 @@ import sys
 
 class Custom_Conf(object):
 
-    def __init__(self, repo_path, repo_export_path, env, repository, project_name, project_version):
+    def __init__(self, repo_path, repo_export_path, env, repository, project_name, project_version, conf_path):
         self.repo_path = repo_path
         self.repo_export_path = repo_export_path
         self.env = env
         self.repository = repository
         self.project_name = project_name
         self.project_version = project_version
+        self.conf_path = conf_path
 
     # 配置配置文件
     def init_conf(self):
@@ -44,6 +49,9 @@ class Custom_Conf(object):
         conf.set("project", "name", "{0}".format(self.project_name))
         conf.set("project", "version", "{0}".format(self.project_version))
 
+        # 日志配置文件位置
+        conf.set("log_path", "conf_path", "{0}".format(self.conf_path))
+
         with open("{0}/project.conf".format(conf_path), "w+") as f:
             conf.write(f)
 
@@ -57,6 +65,7 @@ def check_arg(args=None):
     parser.add_argument('-t', '--repository', help='项目文件存放位置')
     parser.add_argument('-p', '--project_name', help='项目部署文件名-名称')
     parser.add_argument('-v', '--project_version', help='项目部署文件名-版本')
+    parser.add_argument('-c', '--conf_path', help='项目记录日志配置文件')
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -71,7 +80,8 @@ def main():
     repository = args.repository
     project_name = args.project_name
     project_version = args.project_version
-    setup = Custom_Conf(repo_path, export_path, env, repository, project_name, project_version)
+    conf_path = args.conf_path
+    setup = Custom_Conf(repo_path, export_path, env, repository, project_name, project_version, conf_path)
     setup.init_conf()
 
 
