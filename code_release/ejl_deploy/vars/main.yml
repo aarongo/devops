@@ -6,7 +6,7 @@ deploy_project_name: "cybershop-{{ project_name }}-0.0.1-SNAPSHOT"
 # 项目总存放位置
 project_repository: "{{ repository }}"
 # 部署需要的文件
-use_project: "{{ project_repository }}/{{ time }}/{{ git_number }}/{{ deploy_project_name }}"
+use_project: "{{ deploy_file }}"
 # 脚本存放路径
 script_directory: "/software/script"
 # 静态资源目录
