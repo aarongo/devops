@@ -11,9 +11,14 @@ import ast
 
 class Deploy_Project(object):
 
-    def __init__(self, project_name, conf=readconfig().o_conf()):
+    def __init__(self, hosts, project_name, conf=readconfig().o_conf()):
 
         self.repository = conf.get("repository", "path")
+        # 个例 实现
+        """
+        当 ansible 中的主机组名称与部署输入的项目名称不一致时,调用该参数
+        """
+        self.hosts = hosts
         self.project_name = project_name
         self.conf_path = self.conf_path = conf.get("log_path", "conf_path")
         self.log_path = "{0}/{1}".format(conf.get("strong", "strong_path"), "stdout.log")
@@ -38,7 +43,7 @@ class Deploy_Project(object):
 
         playbooks_path = "/etc/ansible/roles/push.yml"
 
-        push_command = """ansible-playbook {0} --extra-vars "hosts={1} src_dir={2} dest_dir={3}" """.format(playbooks_path, self.project_name, push_project_directory, self.repository)
+        push_command = """ansible-playbook {0} --extra-vars "hosts={1} src_dir={2} dest_dir={3}" """.format(playbooks_path, self.hosts, push_project_directory, self.repository)
 
         code_push = Popen(push_command, shell=True, stdout=PIPE, stderr=PIPE)
 
@@ -77,7 +82,7 @@ class Deploy_Project(object):
         # ansible 处理软连接、重启项目、检测（脚本输出）项目状态
         ansible_path = "ansible-playbook"
 
-        other_vars = "hosts={0} project_name={1} deploy_file={2}".format(self.project_name, self.project_name, self.deploy_log())
+        other_vars = "hosts={0} project_name={1} deploy_file={2}".format(self.hosts, self.project_name, self.deploy_log())
 
         # 后续是否提出该选项做为公共配置项
         playbook_path = "/etc/ansible/roles/ejl_deploy.yml"
