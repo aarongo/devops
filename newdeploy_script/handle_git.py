@@ -12,7 +12,8 @@ from subprocess import STDOUT, call
 import shutil
 import os
 from config_base import Read_Conf as readconfig
-import sys
+import yaml
+import logging.config
 
 
 class Custom_Git(object):
@@ -27,6 +28,18 @@ class Custom_Git(object):
             self.repo_export = config.get("repo", "repo_export_path")
 
             self.git_bin = config.get("system", "git_bin")
+
+            self.conf_path = config.get("log_path", "conf_path")
+
+    # 记录日志,后续部署调用该日志进行项目部署
+    def write_log(self):
+        log_conf = "{0}/logging.yml".format(self.conf_path)
+        with open(log_conf, 'r') as f_conf:
+            dict_conf = yaml.load(f_conf)
+        logging.config.dictConfig(dict_conf)
+
+        logger = logging.getLogger('git_info')
+        return logger
 
     def client(self):
 
@@ -76,6 +89,10 @@ class Custom_Git(object):
 
             self.client().pull()
 
+        messages = "switch branch {0} successful".format(self.branch_name)
+
+        self.write_log().info(messages)
+
     # 检出代码
     def export_branch(self):
 
@@ -96,5 +113,9 @@ class Custom_Git(object):
         os.chdir(self.repo_path)
 
         ret_code = call(export_command, shell=True, stdout=FNULL, stderr=STDOUT)
+
+        messages = "export branch {0} to {1} successful".format(self.branch_name, self.repo_export)
+
+        self.write_log().info(messages)
 
         return ret_code
