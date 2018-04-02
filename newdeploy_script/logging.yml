@@ -1,0 +1,54 @@
+# 项目记录日志配置文件
+version: 1
+disable_existing_loggers: False
+formatters:
+        simple:
+            format: "%(asctime)s  -  %(name)s  -  %(levelname)s  -  %(message)s"
+            datefmt: '%Y-%m-%d %A %H:%M:%S'
+handlers:
+    console:
+            class: logging.StreamHandler
+            level: DEBUG
+            formatter: simple
+            stream: ext://sys.stdout
+    info_file_handler_git:
+            class: logging.handlers.RotatingFileHandler
+            level: INFO
+            formatter: simple
+            filename: /software/script/custom_script/git_info.log
+            maxBytes: 10485760
+            backupCount: 20
+            encoding: utf8
+    info_file_handler_builded:
+            class: logging.handlers.RotatingFileHandler
+            level: INFO
+            formatter: simple
+            filename: /software/script/custom_script/stdout.log
+            maxBytes: 10485760
+            backupCount: 20
+            encoding: utf8
+    error_file_handler:
+            class: logging.handlers.RotatingFileHandler
+            level: ERROR
+            formatter: simple
+            filename: /software/script/custom_script/errors.log
+            maxBytes: 10485760
+            backupCount: 20
+            encoding: utf8
+loggers:
+    my_module:
+            level: ERROR
+            handlers: [info_file_handler_git,info_file_handler_builded]
+            propagate: no
+    git_info:
+            level: INFO
+            handlers: [info_file_handler_git]
+            propagate: yes
+    builded:
+            level: INFO
+            handlers: [info_file_handler_builded]
+            propagate: yes
+root:
+    level: INFO
+    handlers: [console,error_file_handler]
+
