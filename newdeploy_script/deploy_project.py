@@ -20,7 +20,7 @@ class Deploy_Project(object):
         """
         self.hosts = hosts
         self.project_name = project_name
-        self.conf_path = self.conf_path = conf.get("log_path", "conf_path")
+        self.conf_path = conf.get("log_path", "conf_path")
         self.log_path = "{0}/{1}".format(conf.get("strong", "strong_path"), "stdout.log")
 
     # 记录日志,后续部署调用该日志进行项目部署
