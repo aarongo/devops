@@ -6,7 +6,6 @@
 项目 版本库 公用操作类
 """
 
-
 import git
 from subprocess import STDOUT, call
 import shutil
