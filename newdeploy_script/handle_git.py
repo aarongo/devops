@@ -17,18 +17,38 @@ import logging.config
 
 class Custom_Git(object):
 
-    def __init__(self, branch_name, config=readconfig().o_conf()):
+    def __init__(self, branch_name, project, config=readconfig().o_conf()):
 
         self.branch_name = branch_name
 
-        if config != 1:
-            self.repo_path = config.get("repo", "repo_path")
+        if project == "wxshop":
+            if config != 1:
+                self.repo_path = config.get("repo_front", "repo_path")
 
-            self.repo_export = config.get("repo", "repo_export_path")
+                self.repo_export = config.get("repo_front", "repo_export_path")
 
-            self.git_bin = config.get("system", "git_bin")
+                self.git_bin = config.get("system", "git_bin")
 
-            self.conf_path = config.get("log_path", "conf_path")
+                self.conf_path = config.get("log_path", "conf_path")
+
+        elif project == "teamshop":
+            if config != 1:
+                self.repo_path = config.get("repo_front", "repo_path_two")
+
+                self.repo_export = config.get("repo_front", "repo_export_path_two")
+
+                self.git_bin = config.get("system", "git_bin")
+
+                self.conf_path = config.get("log_path", "conf_path")
+        elif project == "default":
+            if config != 1:
+                self.repo_path = config.get("repo", "repo_path")
+
+                self.repo_export = config.get("repo", "repo_export_path")
+
+                self.git_bin = config.get("system", "git_bin")
+
+                self.conf_path = config.get("log_path", "conf_path")
 
     # 记录日志,后续部署调用该日志进行项目部署
     def write_log(self):
@@ -76,11 +96,11 @@ class Custom_Git(object):
             """1. 首先切换成 Master 2. 更新 Master 分支 获取远端分支或者程序的更改 3. 删除输入的分支"""
             self.client().checkout(default)
 
-            self.client().branch("-D", self.branch_name)
-
             self.client().pull()
 
             self.client().checkout(self.branch_name)
+
+            self.client().pull()
 
         else:
 
@@ -98,9 +118,11 @@ class Custom_Git(object):
         print ("Export Branch {0}".format(self.branch_name))
 
         if os.path.exists(self.repo_export):
+
             shutil.rmtree(self.repo_export)
 
         if not os.path.exists(self.repo_export):
+
             os.makedirs(self.repo_export)
 
         # 检出 GIT 工作目录
@@ -114,6 +136,7 @@ class Custom_Git(object):
         ret_code = call(export_command, shell=True, stdout=FNULL, stderr=STDOUT)
 
         messages = "export branch {0} to {1} successful".format(self.branch_name, self.repo_export)
+
 
         self.write_log().info(messages)
 

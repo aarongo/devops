@@ -31,6 +31,8 @@ class Maven_Build(object):
         self.maven_bin = conf.get("system", "mvn_bin")
         # 日志文件存储位置与配置位置
         self.conf_path = conf.get("log_path", "conf_path")
+        # war 包存放位置
+        self.deploy_path = conf.get("deploy", "path")
 
     # 记录日志,后续部署调用该日志进行项目部署
     def write_log(self):
@@ -41,6 +43,32 @@ class Maven_Build(object):
 
         logger = logging.getLogger('builded')
         return logger
+
+    # 拷贝前端文件到后端项目
+    def Transfer_File(self):
+
+        # 后端项目文件路径
+        backend_file_path = "{0}/{1}/{2}/{3}/{4}/{5}".format(self.code_export, "cybershop-mobile", 'src', 'main', 'webapp', 'mobile')
+
+        # 前端文件目录
+        front_file_path = "{0}".format(self.repository)
+
+        # 前端文件名
+        front_name = ['wx_www', 'tm_group']
+
+        for name in front_name:
+
+            if name == 'wx_www':
+
+                path = "{0}/{1}".format(front_file_path, name)
+
+                shutil.copytree(path, "{0}/{1}".format(backend_file_path, "www"))
+
+            else:
+
+                path = "{0}/{1}".format(front_file_path, name)
+
+                shutil.copytree(path, "{0}/{1}".format(backend_file_path, "group"))
 
     # 代码编译
     def Maven_Code_Build(self):
@@ -92,7 +120,7 @@ class Maven_Build(object):
         result = {}
 
         # 版本信息
-        git_number = git(self.branch_name).branch_version()
+        git_number = git(self.branch_name, project='default').branch_version()
 
         print "\033[32m项目安装包处理.请等待...........\033[0m"
 
@@ -100,21 +128,33 @@ class Maven_Build(object):
             # 项目包名称
             deploy_name = "{0}-{1}-{2}-{3}".format(self.head_name, name, self.version, self.snapshot)
             # 项目部署文件存放位置--项目推送过程中需要推送到2级目录
-            save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, name, self.branch_name, git_number, deploy_name)
-            if not os.path.exists(save_path):
-                os.makedirs(save_path)
-            else:
-                shutil.rmtree(save_path)
+
+            # save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, name, self.branch_name, git_number, deploy_name)
+
+            # save_path = "{0}/{1}/{2}/{3}".format(self.repository, name, self.branch_name, git_number)
+
+            if os.path.exists(self.deploy_path):
+
+                shutil.rmtree(self.deploy_path)
+
+            os.makedirs(self.deploy_path)
+
             # 项目包生成路径
             deploy_files_path = "%s/cybershop-%s/target/%s" % (self.code_export, name, deploy_name) + ".war"
+
+            # 生成的路径
+            save_path = "{0}/{1}.{2}".format(self.deploy_path, deploy_name, "war")
+
+            shutil.copy(deploy_files_path, self.deploy_path)
+
             # 直接将项目包解压到项目目录
-            try:
-                zip_ref = zipfile.ZipFile(deploy_files_path, 'r')
-                zip_ref.extractall(save_path)
-                zip_ref.close()
-                print "\033[32m项目包(%s)处理完成!!!\033[0m" % name
-            except IOError:
-                print "\033[31m%s Is Not Exists Please Run bulid\033[0m" % deploy_files_path
+            # try:
+            #     zip_ref = zipfile.ZipFile(deploy_files_path, 'r')
+            #     zip_ref.extractall(save_path)
+            #     zip_ref.close()
+            #     print "\033[32m项目包(%s)处理完成!!!\033[0m" % name
+            # except IOError:
+            #     print "\033[31m%s Is Not Exists Please Run bulid\033[0m" % deploy_files_path
 
             result[name] = save_path
         # 返回所有结果或者记录到日志中
