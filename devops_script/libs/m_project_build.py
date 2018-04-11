@@ -3,15 +3,14 @@
 # Author EdwardLiu
 
 """后端项目编译"""
-from datetime import datetime
 import os
-from subprocess import Popen, PIPE
-import sys
-from devops_script.conf.config_base import Read_Conf as readconfig
-from handle_git import Custom_Git as git
 import shutil
-import yaml
-import logging.config
+import sys
+from datetime import datetime
+from subprocess import PIPE, Popen
+
+from devops_script.conf.config_base import Read_Conf as readconfig
+from devops_script.conf.write_logs import Write_Logs as logs
 
 
 class Maven_Build(object):
@@ -28,26 +27,17 @@ class Maven_Build(object):
         self.snapshot = "{0}".format(conf.get("project", "snapshot"))
         # 拼接完成
         self.maven_bin = conf.get("system", "mvn_bin")
-        # 日志文件存储位置与配置位置
+        # 日志文件存储位置与配置文件位置
         self.conf_path = conf.get("log_path", "conf_path")
         # war 包存放位置
         self.deploy_path = conf.get("deploy", "path")
 
-    # 记录日志,后续部署调用该日志进行项目部署
-    def write_log(self):
-        log_conf = "{0}/logging.yml".format(self.conf_path)
-        with open(log_conf, 'r') as f_conf:
-            dict_conf = yaml.load(f_conf)
-        logging.config.dictConfig(dict_conf)
-
-        logger = logging.getLogger('builded')
-        return logger
-
-    # 拷贝前端文件到后端项目
+    # 拷贝前端文件到后端项目-合并其后端项目文件
     def Transfer_File(self):
 
         # 后端项目文件路径
-        backend_file_path = "{0}/{1}/{2}/{3}/{4}/{5}".format(self.code_export, "cybershop-mobile", 'src', 'main', 'webapp', 'mobile')
+        backend_file_path = "{0}/{1}/{2}/{3}/{4}/{5}".format(self.code_export, "cybershop-mobile", 'src', 'main',
+                                                             'webapp', 'mobile')
 
         # 前端文件目录
         front_file_path = "{0}".format(self.repository)
@@ -113,27 +103,26 @@ class Maven_Build(object):
             print "\033[32m 退出编译\033[0m"
 
     # 文件处理
+    '''
+    （1）处理所有需要部署的项目文件处理， 存放到统一目录
+    （2）只生成带部署war包、不做任何处理
+    （3）将结果记录到日志中
+    （4）war包存放的位置有且只存在同名唯一文件
+    （5）该目录可提供外部下载
+    '''
+
     def Files_Handle(self):
 
         # 收集所有输出结果
         result = {}
-
-        # 版本信息
-        git_number = git(self.branch_name, project='default').branch_version()
 
         print "\033[32m项目安装包处理.请等待...........\033[0m"
 
         for name in self.project_name.split(','):
             # 项目包名称
             deploy_name = "{0}-{1}-{2}-{3}".format(self.head_name, name, self.version, self.snapshot)
-            # 项目部署文件存放位置--项目推送过程中需要推送到2级目录
-
-            # save_path = "{0}/{1}/{2}/{3}/{4}".format(self.repository, name, self.branch_name, git_number, deploy_name)
-
-            # save_path = "{0}/{1}/{2}/{3}".format(self.repository, name, self.branch_name, git_number)
 
             if os.path.exists(self.deploy_path):
-
                 shutil.rmtree(self.deploy_path)
 
             os.makedirs(self.deploy_path)
@@ -146,15 +135,7 @@ class Maven_Build(object):
 
             shutil.copy(deploy_files_path, self.deploy_path)
 
-            # 直接将项目包解压到项目目录
-            # try:
-            #     zip_ref = zipfile.ZipFile(deploy_files_path, 'r')
-            #     zip_ref.extractall(save_path)
-            #     zip_ref.close()
-            #     print "\033[32m项目包(%s)处理完成!!!\033[0m" % name
-            # except IOError:
-            #     print "\033[31m%s Is Not Exists Please Run bulid\033[0m" % deploy_files_path
-
             result[name] = save_path
+
         # 返回所有结果或者记录到日志中
-        self.write_log().info(result)
+        logs().write_log("builded").info(result)

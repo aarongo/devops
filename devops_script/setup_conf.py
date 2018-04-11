@@ -7,9 +7,9 @@
 """
 
 
+import argparse
 import ConfigParser
 import os
-import argparse
 import sys
 
 

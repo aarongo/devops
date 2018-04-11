@@ -3,21 +3,22 @@
 # Author EdwardLiu
 
 import argparse
-import sys
 import os
 import shutil
+import sys
 import zipfile
-from tqdm import tqdm
-tqdm.monitor_interval = 0
 from datetime import datetime
 
 import requests
-
 from conf.config_base import Read_Conf as readconfig
-from libs.deploy_project import Deploy_Project
 from conf.write_logs import Write_Logs as logs
+from libs.deploy_project import Deploy_Project
+from tqdm import tqdm
+
+tqdm.monitor_interval = 0
 
 
+# 下载项目部署文件
 def download_file(project):
 
     conf = readconfig().o_conf()
@@ -67,6 +68,7 @@ def download_file(project):
 
     print ("download {0}.war file".format(files_name))
 
+    # 项目下载进度展示
     try:
 
         r = requests.get(base_url, stream=True)
@@ -117,6 +119,11 @@ def download_file(project):
 
 
 # unpack 压缩文件
+'''
+（1）项目文件下载后解压缩
+'''
+
+
 def unpack_file(project):
 
     down = download_file(project)
@@ -151,6 +158,12 @@ def unpack_file(project):
 
     return death_dir
 
+"""
+ hosts： ansible hosts文件内主机组标签
+ name： 项目名称
+ tags： ansible-playbooks文件部标签
+"""
+
 
 def push_deploy(hosts, name, tags):
 
@@ -175,7 +188,7 @@ def check_arg(args=None):
     return parser.parse_args(args)
 
 
-# 针对项目名称与部署文件不对应
+# 针对项目名称与待部署项目名不对应情况
 def project_name_handle(project_name):
 
     if project_name == "restapi":

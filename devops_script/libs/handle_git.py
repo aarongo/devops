@@ -6,13 +6,14 @@
 项目 版本库 公用操作类
 """
 
-import git
-from subprocess import STDOUT, call
-import shutil
 import os
+import shutil
+from subprocess import STDOUT, call
+
+import git
+
 from devops_script.conf.config_base import Read_Conf as readconfig
-import yaml
-import logging.config
+from devops_script.conf.write_logs import Write_Logs as logs
 
 
 class Custom_Git(object):
@@ -21,6 +22,12 @@ class Custom_Git(object):
 
         self.branch_name = branch_name
 
+        # 根据输入的项目名称选用不同的版本库路径
+        '''
+        wxshop： 微信项目
+        teamshop： 拼团项目
+        default： 默认maven项目
+        '''
         if project == "wxshop":
             if config != 1:
                 self.repo_path = config.get("repo_front", "repo_path")
@@ -49,16 +56,6 @@ class Custom_Git(object):
                 self.git_bin = config.get("system", "git_bin")
 
                 self.conf_path = config.get("log_path", "conf_path")
-
-    # 记录日志,后续部署调用该日志进行项目部署
-    def write_log(self):
-        log_conf = "{0}/logging.yml".format(self.conf_path)
-        with open(log_conf, 'r') as f_conf:
-            dict_conf = yaml.load(f_conf)
-        logging.config.dictConfig(dict_conf)
-
-        logger = logging.getLogger('git_info')
-        return logger
 
     def client(self):
 
@@ -110,12 +107,12 @@ class Custom_Git(object):
 
         messages = "switch branch {0} successful".format(self.branch_name)
 
-        self.write_log().info(messages)
+        logs().write_log("git_info").info(messages)
 
     # 检出代码
     def export_branch(self):
 
-        print ("Export Branch {0}".format(self.branch_name))
+        print ("\033[32mExport Branch {0}\033[0m".format(self.branch_name))
 
         if os.path.exists(self.repo_export):
 
@@ -137,7 +134,7 @@ class Custom_Git(object):
 
         messages = "export branch {0} to {1} successful".format(self.branch_name, self.repo_export)
 
+        logs().write_log("git_info").info(messages)
 
-        self.write_log().info(messages)
-
+        # 预留判断接口使用
         return ret_code

@@ -6,8 +6,8 @@
 # @File : f_project_build.py
 
 import os
-import sys
 import shutil
+import sys
 from datetime import datetime
 from subprocess import PIPE, Popen
 
@@ -47,8 +47,6 @@ class Front_Project(object):
             self.yarn_bin, self.build_way, self.project, self.build_env)]
 
         build_return_code = 0
-
-        shutil.copytree("/home/mall/yjl_shell/wx_node_modules", "{0}/node_modules".format(self.repo_export))
 
         try:
             for cmd in build_cmd:
@@ -93,6 +91,10 @@ class Front_Project(object):
             exit(1)
 
     # 微信文件处理
+    """
+    （1）将生成的文件拷贝到存储目录
+    （2）maven项目编译前合并此目录
+    """
     def file_handle(self):
 
         project_file = "{0}/dist/www".format(self.repo_export)
@@ -108,10 +110,3 @@ class Front_Project(object):
             shutil.rmtree(save_file_path)
 
             shutil.copytree(project_file, save_file_path)
-
-        else:
-
-            print ("zouzhe")
-
-
-

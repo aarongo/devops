@@ -9,12 +9,12 @@
 @time: 2018/4/10 15:35
 
 """
-import sys
-from libs.handle_git import Custom_Git as git
 import argparse
+import sys
 
 from libs.f_project_build import Front_Project as wx
 from libs.f_teamshop_build import Front_Project as team
+from libs.handle_git import Custom_Git as git
 
 
 def code_operation(branch, project):
@@ -83,10 +83,6 @@ def main():
         code_operation(branch_name, 'teamshop')
 
         code_build_team(branch_name)
-
-    else:
-
-        pass
 
 
 if __name__ == '__main__':

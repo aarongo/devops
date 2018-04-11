@@ -2,10 +2,13 @@
 # -*- coding: utf-8 -*- 
 # Author EdwardLiu
 
-from subprocess import Popen, PIPE
+"""
+项目部署调用处理 （1）处理项目推送 （2）ansible远程部署
+"""
+from subprocess import PIPE, Popen
+
 from devops_script.conf.config_base import Read_Conf as readconfig
-import yaml
-import logging.config
+from devops_script.conf.write_logs import Write_Logs as logs
 
 
 class Deploy_Project(object):
@@ -21,16 +24,6 @@ class Deploy_Project(object):
         self.project_name = project_name
         self.conf_path = conf.get("log_path", "conf_path")
         self.log_path = "{0}/{1}".format(conf.get("strong", "strong_path"), "unpack.log")
-
-    # 记录日志,后续部署调用该日志进行项目部署
-    def write_log(self):
-        log_conf = "{0}/logging.yml".format(self.conf_path)
-        with open(log_conf, 'r') as f_conf:
-            dict_conf = yaml.load(f_conf)
-        logging.config.dictConfig(dict_conf)
-
-        logger = logging.getLogger('deployed')
-        return logger
 
     # 推送项目文件
     def push_project(self):
@@ -53,11 +46,11 @@ class Deploy_Project(object):
 
         messages = "project push {0} to remote Server {1} success".format(self.project_name, self.project_name)
 
-        self.write_log().info(messages)
+        logs().write_log("deployed").info(messages)
 
         return code_push.returncode
 
-    # 检测以部署的项目
+    # 获取下载后文件处理的路径
     def deploy_log(self):
 
         file_object = open(self.log_path, 'rU')
@@ -65,19 +58,18 @@ class Deploy_Project(object):
         try:
             lines = file_object.readlines()
 
-            # 最近一次编译结果--并且直接转换成字典
-            # result = ast.literal_eval(lines[-1].split('  -  ')[3])
+            # 获取最后一次处理后的文件路径
             result = lines[-1].split('  -  ')[3]
         finally:
             file_object.close()
 
-        # data = result[self.project_name]
-
-        # 返回的是需要部署的路径
-        # return data
+        # 返回路径
         return result
 
     # 部署项目
+    '''
+    tags_name： 主执行文件传输参数--deploy或者rollback
+    '''
     def deploy_project(self, tags_name):
         print "\033[32m项目正在部署重启.....\033[0m"
 
@@ -99,4 +91,4 @@ class Deploy_Project(object):
 
         messages = "project deploy {0} success".format(self.project_name)
 
-        self.write_log().info(messages)
+        logs().write_log("deployed").info(messages)

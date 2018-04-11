@@ -3,17 +3,19 @@
 # Author EdwardLiu
 
 """
-所有工程统一进行编译
+（1）所有工程统一进行编译
+（2）项目编译统一入口
 """
 
-from libs.handle_git import Custom_Git as git
-from libs.m_project_build import Maven_Build as maven
 import argparse
 import sys
 
+from libs.handle_git import Custom_Git as git
+from libs.m_project_build import Maven_Build as maven
 
+
+# 代码版本库操作
 def code_operation(branch, project):
-
     # 初始化 GIT 操作
     opera = git(branch, project)
 
@@ -24,8 +26,8 @@ def code_operation(branch, project):
     opera.export_branch()
 
 
+# 代码编译
 def code_build(branch):
-
     # 初始化 maven 操作
     opera = maven(branch)
 
@@ -37,6 +39,12 @@ def code_build(branch):
 
     # 生成文件处理
     opera.Files_Handle()
+
+
+'''
+project： default--默认读取maven仓库
+branch： 默认是master分支，可以收到输入分支
+'''
 
 
 def check_arg(args=None):
@@ -64,5 +72,4 @@ def main():
 
 
 if __name__ == '__main__':
-
     main()

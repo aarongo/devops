@@ -11,12 +11,13 @@
 """
 
 import os
-import sys
 import shutil
+import sys
 from datetime import datetime
 from subprocess import PIPE, Popen
 
 from devops_script.conf.config_base import Read_Conf as readconfig
+
 
 """
 teamshop 编译项目
@@ -110,6 +111,3 @@ class Front_Project(object):
             shutil.rmtree(save_file_path)
 
             shutil.copytree(project_file, save_file_path)
-
-
-
