@@ -10,11 +10,11 @@
 
 """
 import sys
-from handle_git import Custom_Git as git
+from libs.handle_git import Custom_Git as git
 import argparse
 
-from f_project_build import Front_Project as wx
-from f_teamshop_build import Front_Project as team
+from libs.f_project_build import Front_Project as wx
+from libs.f_teamshop_build import Front_Project as team
 
 
 def code_operation(branch, project):

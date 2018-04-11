@@ -1,9 +1,14 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time : 2018/4/6 下午2:23
-# @Author : EdwardLiu
-# @Site :
-# @File : f_project_build.py
+# -*- coding: utf-8 -*- 
+
+"""
+@author: EdwardLiu 
+@contact: lonnyliu@126.com
+
+@file: f_teamshop_build.py.py
+@time: 2018/4/10 15:29
+
+"""
 
 import os
 import sys
@@ -11,44 +16,40 @@ import shutil
 from datetime import datetime
 from subprocess import PIPE, Popen
 
-from config_base import Read_Conf as readconfig
+from devops_script.conf.config_base import Read_Conf as readconfig
 
 """
-wxshop 编译项目
+teamshop 编译项目
 """
 
 
 class Front_Project(object):
 
-    def __init__(self, branch, project, conf=readconfig().o_conf()):
+    def __init__(self, branch, conf=readconfig().o_conf()):
 
         self.branch_name = branch
 
-        self.project = project
+        self.repo_path = conf.get("repo_front", "repo_path_two")
 
-        self.repo_path = conf.get("repo_front", "repo_path")
-
-        self.repo_export = conf.get("repo_front", "repo_export_path")
+        self.repo_export = conf.get("repo_front", "repo_export_path_two")
 
         self.npm_bin = conf.get("system", "npm_bin")
 
-        self.yarn_bin = conf.get("system", "yarn_bin")
+        self.gulp_bin = conf.get("system", "gulp_bin")
 
         self.build_env = conf.get("front-build-options", "build_env")
 
-        self.build_way = conf.get("front-build-options", "build_way_wx")
+        self.build_way = conf.get("front-build-options", "build_way_teamshop")
 
         self.repository = conf.get("repository", "path")
 
     # 编译前端代码
     def Build(self):
 
-        build_cmd = ["{0}".format(self.yarn_bin), "{0} {1} -t {2} -e {3}".format(
-            self.yarn_bin, self.build_way, self.project, self.build_env)]
+        build_cmd = ["{0} start".format(self.npm_bin), "{0} {1} -t {2} -e {3}".format(
+            self.gulp_bin, self.build_way, "wxshop", self.build_env)]
 
         build_return_code = 0
-
-        shutil.copytree("/home/mall/yjl_shell/wx_node_modules", "{0}/node_modules".format(self.repo_export))
 
         try:
             for cmd in build_cmd:
@@ -56,6 +57,7 @@ class Front_Project(object):
                 # 编译命令
                 # 更换工作目录
                 os.chdir(self.repo_export)
+                print "asfafa", self.repo_export
                 # 运行编译命令
                 build_status = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
                 # 显示编译进度---使用时间作为记录标识
@@ -95,9 +97,9 @@ class Front_Project(object):
     # 微信文件处理
     def file_handle(self):
 
-        project_file = "{0}/dist/www".format(self.repo_export)
+        project_file = "{0}/dist".format(self.repo_export)
 
-        save_file_path = "{0}/wx_www".format(self.repository)
+        save_file_path = "{0}/tm_group".format(self.repository)
 
         if not os.path.exists(save_file_path):
 
@@ -108,10 +110,6 @@ class Front_Project(object):
             shutil.rmtree(save_file_path)
 
             shutil.copytree(project_file, save_file_path)
-
-        else:
-
-            print ("zouzhe")
 
 
 

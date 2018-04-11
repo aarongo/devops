@@ -3,10 +3,9 @@
 # Author EdwardLiu
 
 from subprocess import Popen, PIPE
-from config_base import Read_Conf as readconfig
+from devops_script.conf.config_base import Read_Conf as readconfig
 import yaml
 import logging.config
-import ast
 
 
 class Deploy_Project(object):
@@ -21,7 +20,7 @@ class Deploy_Project(object):
         self.hosts = hosts
         self.project_name = project_name
         self.conf_path = conf.get("log_path", "conf_path")
-        self.log_path = "{0}/{1}".format(conf.get("strong", "strong_path"), "stdout.log")
+        self.log_path = "{0}/{1}".format(conf.get("strong", "strong_path"), "unpack.log")
 
     # 记录日志,后续部署调用该日志进行项目部署
     def write_log(self):
@@ -41,7 +40,8 @@ class Deploy_Project(object):
         # 使用ansible rsync模块直接推送到远端
         push_project_directory = "%s/%s" % (self.repository, self.project_name)
 
-        playbooks_path = "/etc/ansible/roles/push.yml"
+        # 后期写入到配置文件中
+        playbooks_path = "/software/ansible_playbooks/playbooks/push.yml"
 
         push_command = """ansible-playbook {0} --extra-vars "hosts={1} src_dir={2} dest_dir={3}" """.format(playbooks_path, self.hosts, push_project_directory, self.repository)
 
@@ -66,14 +66,16 @@ class Deploy_Project(object):
             lines = file_object.readlines()
 
             # 最近一次编译结果--并且直接转换成字典
-            result = ast.literal_eval(lines[-1].split('  -  ')[3])
+            # result = ast.literal_eval(lines[-1].split('  -  ')[3])
+            result = lines[-1].split('  -  ')[3]
         finally:
             file_object.close()
 
-        data = result[self.project_name]
+        # data = result[self.project_name]
 
         # 返回的是需要部署的路径
-        return data
+        # return data
+        return result
 
     # 部署项目
     def deploy_project(self, tags_name):
@@ -85,7 +87,7 @@ class Deploy_Project(object):
         other_vars = "hosts={0} project_name={1} deploy_file={2}".format(self.hosts, self.project_name, self.deploy_log())
 
         # 后续是否提出该选项做为公共配置项
-        playbook_path = "/etc/ansible/roles/ejl_deploy.yml"
+        playbook_path = "/software/ansible_playbooks/playbooks/ejl_deploy.yml"
 
         deploy_command = """{0} {1} --tags {2} --extra-vars "{3}" """.format(ansible_path, playbook_path, tags_name, other_vars)
 

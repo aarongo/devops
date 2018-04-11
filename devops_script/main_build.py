@@ -6,8 +6,8 @@
 所有工程统一进行编译
 """
 
-from handle_git import Custom_Git as git
-from m_project_build import Maven_Build as maven
+from libs.handle_git import Custom_Git as git
+from libs.m_project_build import Maven_Build as maven
 import argparse
 import sys
 
@@ -42,7 +42,7 @@ def code_build(branch):
 def check_arg(args=None):
     parser = argparse.ArgumentParser(description="EG: '%(prog)s'  build maven project")
     parser.add_argument('-p', '--project', default='default', help='branch name')
-    parser.add_argument('-b', '--branch', help='branch name')
+    parser.add_argument('-b', '--branch', default='master', help='branch name')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
     if len(sys.argv) == 1:
         parser.print_help()

@@ -10,7 +10,7 @@ import git
 from subprocess import STDOUT, call
 import shutil
 import os
-from config_base import Read_Conf as readconfig
+from devops_script.conf.config_base import Read_Conf as readconfig
 import yaml
 import logging.config
 

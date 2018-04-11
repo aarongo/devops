@@ -7,8 +7,7 @@ from datetime import datetime
 import os
 from subprocess import Popen, PIPE
 import sys
-import zipfile
-from config_base import Read_Conf as readconfig
+from devops_script.conf.config_base import Read_Conf as readconfig
 from handle_git import Custom_Git as git
 import shutil
 import yaml
