@@ -14,14 +14,13 @@ import logging.config
 
 import yaml
 
-from config_base import Read_Conf as readconfig
+import os
 
 
 class Write_Logs(object):
 
-    def __init__(self, conf=readconfig().o_conf()):
-        if conf['status'] != 1:
-            self.conf_path = conf.get("log_path", "conf_path")
+    # 获取上一层目录下的 conf 目录
+    conf_path = "{0}/{1}".format(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), "conf")
 
     """
         记录日志方法

@@ -7,8 +7,8 @@
 """
 from subprocess import PIPE, Popen
 
-from devops_script.conf.config_base import Read_Conf as readconfig
-from devops_script.conf.write_logs import Write_Logs as logs
+from config_base import Read_Conf as readconfig
+from write_logs import Write_Logs as logs
 
 
 class Deploy_Project(object):
@@ -22,8 +22,8 @@ class Deploy_Project(object):
         """
         self.hosts = hosts
         self.project_name = project_name
-        self.conf_path = conf.get("log_path", "conf_path")
-        self.log_path = "{0}/{1}".format(conf.get("strong", "strong_path"), "unpack.log")
+        self.conf_path = conf.get("conf", "path")
+        self.log_path = "{0}/{1}".format(conf.get("logs", "path"), "unpack.log")
 
     # 推送项目文件
     def push_project(self):

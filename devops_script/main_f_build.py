@@ -12,9 +12,9 @@
 import argparse
 import sys
 
-from libs.f_project_build import Front_Project as wx
-from libs.f_teamshop_build import Front_Project as team
-from libs.handle_git import Custom_Git as git
+from utils.f_project_build import Front_Project as wx
+from utils.f_teamshop_build import Front_Project as team
+from utils.handle_git import Custom_Git as git
 
 
 def code_operation(branch, project):
@@ -55,12 +55,9 @@ def code_build_team(branch):
 
 def check_arg(args=None):
     parser = argparse.ArgumentParser(description="EG: '%(prog)s'  build maven project")
-    parser.add_argument('-p', '--project', help="需要编译的环境")
+    parser.add_argument('-p', '--project', default=['wxshop', 'teamshop'], help="需要编译的环境")
     parser.add_argument('-b', '--branch', default='master', help='分之名称')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
     return parser.parse_args(args)
 
 
@@ -72,19 +69,22 @@ def main():
 
     project = args.project
 
-    if project == 'wxshop':
+    # 增加个例化项目配置
+    for name in project:
 
-        code_operation(branch_name, "wxshop")
+        if name == 'wxshop':
 
-        code_build_wx(branch_name, "wxshop")
+            code_operation(branch_name, "wxshop")
 
-    elif project == 'teamshop':
+            code_build_wx(branch_name, "wxshop")
 
-        code_operation(branch_name, 'teamshop')
+        elif name == 'teamshop':
 
-        code_build_team(branch_name)
+            code_operation(branch_name, 'teamshop')
+
+            code_build_team(branch_name)
 
 
-if __name__ == '__main__':
-
-    main()
+# if __name__ == '__main__':
+#
+#     main()

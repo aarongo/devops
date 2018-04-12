@@ -10,8 +10,8 @@
 import argparse
 import sys
 
-from libs.handle_git import Custom_Git as git
-from libs.m_project_build import Maven_Build as maven
+from utils.handle_git import Custom_Git as git
+from utils.m_project_build import Maven_Build as maven
 
 
 # 代码版本库操作
@@ -32,12 +32,13 @@ def code_build(branch):
     opera = maven(branch)
 
     # 前端文件拷贝
+    print ("Transfer Front File for maven project")
     opera.Transfer_File()
 
     # 代码编译
-    opera.Maven_Code_Build()
+    # opera.Maven_Code_Build()
 
-    # 生成文件处理
+    # 生成文件处理--该方法直接处理编译
     opera.Files_Handle()
 
 
@@ -52,9 +53,6 @@ def check_arg(args=None):
     parser.add_argument('-p', '--project', default='default', help='branch name')
     parser.add_argument('-b', '--branch', default='master', help='branch name')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
     return parser.parse_args(args)
 
 

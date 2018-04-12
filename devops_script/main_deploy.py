@@ -10,9 +10,11 @@ import zipfile
 from datetime import datetime
 
 import requests
-from conf.config_base import Read_Conf as readconfig
-from conf.write_logs import Write_Logs as logs
-from libs.deploy_project import Deploy_Project
+
+from utils.config_base import Read_Conf as readconfig
+from utils.write_logs import Write_Logs as logs
+from utils.deploy_project import Deploy_Project
+
 from tqdm import tqdm
 
 tqdm.monitor_interval = 0

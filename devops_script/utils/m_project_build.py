@@ -9,8 +9,8 @@ import sys
 from datetime import datetime
 from subprocess import PIPE, Popen
 
-from devops_script.conf.config_base import Read_Conf as readconfig
-from devops_script.conf.write_logs import Write_Logs as logs
+from config_base import Read_Conf as readconfig
+from write_logs import Write_Logs as logs
 
 
 class Maven_Build(object):
@@ -27,8 +27,6 @@ class Maven_Build(object):
         self.snapshot = "{0}".format(conf.get("project", "snapshot"))
         # 拼接完成
         self.maven_bin = conf.get("system", "mvn_bin")
-        # 日志文件存储位置与配置文件位置
-        self.conf_path = conf.get("log_path", "conf_path")
         # war 包存放位置
         self.deploy_path = conf.get("deploy", "path")
 
@@ -116,26 +114,32 @@ class Maven_Build(object):
         # 收集所有输出结果
         result = {}
 
-        print "\033[32m项目安装包处理.请等待...........\033[0m"
+        if self.Maven_Code_Build() == 0:
 
-        for name in self.project_name.split(','):
-            # 项目包名称
-            deploy_name = "{0}-{1}-{2}-{3}".format(self.head_name, name, self.version, self.snapshot)
+            print "\033[32m项目安装包处理.请等待...........\033[0m"
 
-            if os.path.exists(self.deploy_path):
-                shutil.rmtree(self.deploy_path)
+            for name in self.project_name.split(','):
+                # 项目包名称
+                deploy_name = "{0}-{1}-{2}-{3}".format(self.head_name, name, self.version, self.snapshot)
 
-            os.makedirs(self.deploy_path)
+                if os.path.exists(self.deploy_path):
+                    shutil.rmtree(self.deploy_path)
 
-            # 项目包生成路径
-            deploy_files_path = "%s/cybershop-%s/target/%s" % (self.code_export, name, deploy_name) + ".war"
+                os.makedirs(self.deploy_path)
 
-            # 生成的路径
-            save_path = "{0}/{1}.{2}".format(self.deploy_path, deploy_name, "war")
+                # 项目包生成路径
+                deploy_files_path = "%s/cybershop-%s/target/%s" % (self.code_export, name, deploy_name) + ".war"
 
-            shutil.copy(deploy_files_path, self.deploy_path)
+                # 生成的路径
+                save_path = "{0}/{1}.{2}".format(self.deploy_path, deploy_name, "war")
 
-            result[name] = save_path
+                shutil.copy(deploy_files_path, self.deploy_path)
+
+                result[name] = save_path
+
+        else:
+
+            result = {"status": "failed"}
 
         # 返回所有结果或者记录到日志中
         logs().write_log("builded").info(result)

@@ -15,7 +15,7 @@ class Read_Conf(object):
     # 读取配置文件
     def o_conf(self):
 
-        conf_path = os.path.abspath(os.path.dirname(__file__))
+        conf_path = "{0}/{1}".format(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), "conf")
 
         # 判断配置文件是否存在
         if os.path.exists("{0}/project.conf".format(conf_path)):

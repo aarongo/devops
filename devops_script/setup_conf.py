@@ -15,7 +15,7 @@ import sys
 
 class Custom_Conf(object):
 
-    def __init__(self, repo_path, repo_export_path, env, repository, project_name, project_version, conf_path, strong_path, wx_repo, wx_repo_export, team_repo, team_repo_export):
+    def __init__(self, repo_path, repo_export_path, env, repository, project_name, project_version, conf_path, logs_path, wx_repo, wx_repo_export, team_repo, team_repo_export):
         self.repo_path = repo_path
         self.repo_export_path = repo_export_path
         self.env = env
@@ -23,7 +23,7 @@ class Custom_Conf(object):
         self.project_name = project_name
         self.project_version = project_version
         self.conf_path = conf_path
-        self.strong_path = strong_path
+        self.logs_path = logs_path
         self.wx_repo = wx_repo
         self.wx_repo_export = wx_repo_export
         self.team_repo = team_repo
@@ -32,7 +32,7 @@ class Custom_Conf(object):
     # 配置配置文件
     def init_conf(self):
 
-        conf_path = os.path.abspath(os.path.dirname(__file__))
+        conf_path = "{0}/{1}".format(os.path.abspath(os.path.dirname(__file__)), "conf")
 
         conf = ConfigParser.ConfigParser()
 
@@ -55,10 +55,10 @@ class Custom_Conf(object):
         conf.set("project", "version", "{0}".format(self.project_version))
 
         # 日志配置文件位置
-        conf.set("log_path", "conf_path", "{0}".format(self.conf_path))
+        conf.set("conf", "path", "{0}".format(self.conf_path))
 
         # 配置脚本存放路径
-        conf.set("strong", "strong_path", "{0}".format(self.strong_path))
+        conf.set("logs", "path", "{0}".format(self.logs_path))
 
         # 配置前端仓库地址
         conf.set("repo_front", "repo_path", "{0}".format(self.wx_repo))
@@ -79,8 +79,8 @@ def check_arg(args=None):
     parser.add_argument('-t', '--repository', help='后端项目文件存放位置')
     parser.add_argument('-p', '--project_name', help='后端项目部署文件名-名称')
     parser.add_argument('-v', '--project_version', help='后端项目部署文件名-版本')
-    parser.add_argument('-c', '--conf_path', help='项目记录日志配置文件')
-    parser.add_argument('-d', '--strong_path', help='项目脚本存放路径')
+    parser.add_argument('-c', '--conf_path', help='项目配置文件')
+    parser.add_argument('-d', '--logs_path', help='项目日志存放路径')
     parser.add_argument('-w', '--wx_repo', help='微信版本库路径')
     parser.add_argument('-x', '--wx_repo_export', help='微信版本库导出路径')
     parser.add_argument('-m', '--tm_repo', help='拼团版本库路径')
@@ -100,7 +100,7 @@ def main():
     project_name = args.project_name
     project_version = args.project_version
     conf_path = args.conf_path
-    strong_path = args.strong_path
+    strong_path = args.logs_path
     wx_repo = args.wx_repo
     wx_export = args.wx_repo_export
     tm_repo = args.tm_repo

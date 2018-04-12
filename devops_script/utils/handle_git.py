@@ -12,8 +12,8 @@ from subprocess import STDOUT, call
 
 import git
 
-from devops_script.conf.config_base import Read_Conf as readconfig
-from devops_script.conf.write_logs import Write_Logs as logs
+from config_base import Read_Conf as readconfig
+from write_logs import Write_Logs as logs
 
 
 class Custom_Git(object):
@@ -36,8 +36,6 @@ class Custom_Git(object):
 
                 self.git_bin = config.get("system", "git_bin")
 
-                self.conf_path = config.get("log_path", "conf_path")
-
         elif project == "teamshop":
             if config != 1:
                 self.repo_path = config.get("repo_front", "repo_path_two")
@@ -46,7 +44,6 @@ class Custom_Git(object):
 
                 self.git_bin = config.get("system", "git_bin")
 
-                self.conf_path = config.get("log_path", "conf_path")
         elif project == "default":
             if config != 1:
                 self.repo_path = config.get("repo", "repo_path")
@@ -54,8 +51,6 @@ class Custom_Git(object):
                 self.repo_export = config.get("repo", "repo_export_path")
 
                 self.git_bin = config.get("system", "git_bin")
-
-                self.conf_path = config.get("log_path", "conf_path")
 
     def client(self):
 
