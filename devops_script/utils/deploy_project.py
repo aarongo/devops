@@ -79,7 +79,7 @@ class Deploy_Project(object):
         other_vars = "hosts={0} project_name={1} deploy_file={2}".format(self.hosts, self.project_name, self.deploy_log())
 
         # 后续是否提出该选项做为公共配置项
-        playbook_path = "/software/ansible_playbooks/playbooks/ejl_deploy.yml"
+        playbook_path = "/software/ansible_playbooks/playbooks/ansible_playbooks.yml"
 
         deploy_command = """{0} {1} --tags {2} --extra-vars "{3}" """.format(ansible_path, playbook_path, tags_name, other_vars)
 
