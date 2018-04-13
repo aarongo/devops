@@ -1,7 +1,0 @@
----
-- name: difference handle for {{ project_name }}
-  template:
-    src: quartz.xml.j2
-    dest: "{{run_crontab_node_path }}/quartz.xml"
-    mode: 0755
-  when: (project_name == "web" and crontab == "yes")
