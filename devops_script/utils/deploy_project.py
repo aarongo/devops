@@ -44,11 +44,17 @@ class Deploy_Project(object):
 
         print stdout
 
-        messages = "project push {0} to remote Server {1} success".format(self.project_name, self.project_name)
+        if code_push.returncode == 0:
 
-        logs().write_log("deployed").info(messages)
+            messages = "project push {0} to remote Server {1} success".format(self.project_name, self.project_name)
 
-        return code_push.returncode
+            logs().write_log("deployed").info(messages)
+
+        else:
+
+            messages = "project push {0} to remote Server {1} Failed".format(self.project_name, self.project_name)
+
+            logs().write_log("deployed").info(messages)
 
     # 获取下载后文件处理的路径
     def deploy_log(self):
@@ -89,6 +95,15 @@ class Deploy_Project(object):
 
         print stdout
 
-        messages = "project deploy {0} success".format(self.project_name)
+        if code_deploy.returncode == 0:
 
-        logs().write_log("deployed").info(messages)
+            messages = "project deploy {0} success".format(self.project_name)
+
+            logs().write_log("deployed").info(messages)
+
+        else:
+
+            messages = "project deploy {0} Failed".format(self.project_name)
+
+            logs().write_log("deployed").info(messages)
+

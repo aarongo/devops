@@ -14,6 +14,8 @@ import logging.config
 import yaml
 import os
 
+from main_f_build import main as frontbuild
+
 conf_path = os.path.abspath(os.path.join(os.getcwd(), ".."))
 
 print  conf_path

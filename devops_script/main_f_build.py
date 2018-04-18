@@ -53,6 +53,22 @@ def code_build_team(branch):
     opera.file_handle()
 
 
+#
+def name_process(branch_name, project):
+
+    if project == 'wxshop':
+
+        code_operation(branch_name, "wxshop")
+
+        code_build_wx(branch_name, "wxshop")
+
+    elif project == 'teamshop':
+
+        code_operation(branch_name, 'teamshop')
+
+        code_build_team(branch_name)
+
+
 def check_arg(args=None):
     parser = argparse.ArgumentParser(description="EG: '%(prog)s'  build maven project")
     parser.add_argument('-p', '--project', default=['wxshop', 'teamshop'], help="需要编译的环境")
@@ -70,21 +86,17 @@ def main():
     project = args.project
 
     # 增加个例化项目配置
-    for name in project:
+    if isinstance(project, list):
+        for name in project:
 
-        if name == 'wxshop':
+            name_process(project=name, branch_name=branch_name)
 
-            code_operation(branch_name, "wxshop")
+    else:
 
-            code_build_wx(branch_name, "wxshop")
-
-        elif name == 'teamshop':
-
-            code_operation(branch_name, 'teamshop')
-
-            code_build_team(branch_name)
+        name_process(project=project, branch_name=branch_name)
 
 
-# if __name__ == '__main__':
-#
-#     main()
+if __name__ == '__main__':
+
+    main()
+

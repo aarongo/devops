@@ -127,9 +127,17 @@ class Custom_Git(object):
 
         ret_code = call(export_command, shell=True, stdout=FNULL, stderr=STDOUT)
 
-        messages = "export branch {0} to {1} successful".format(self.branch_name, self.repo_export)
+        if ret_code == 0:
 
-        logs().write_log("git_info").info(messages)
+            messages = "export branch {0} to {1} successful".format(self.branch_name, self.repo_export)
+
+            logs().write_log("git_info").info(messages)
+
+        else:
+
+            messages = "export branch {0} to {1} Failed".format(self.branch_name, self.repo_export)
+
+            logs().write_log("git_info").info(messages)
 
         # 预留判断接口使用
         return ret_code

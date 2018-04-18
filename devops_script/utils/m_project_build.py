@@ -122,16 +122,23 @@ class Maven_Build(object):
                 # 项目包名称
                 deploy_name = "{0}-{1}-{2}-{3}".format(self.head_name, name, self.version, self.snapshot)
 
-                if os.path.exists(self.deploy_path):
-                    shutil.rmtree(self.deploy_path)
+                if not os.path.exists(self.deploy_path):
 
-                os.makedirs(self.deploy_path)
+                    os.makedirs(self.deploy_path)
 
                 # 项目包生成路径
                 deploy_files_path = "%s/cybershop-%s/target/%s" % (self.code_export, name, deploy_name) + ".war"
 
                 # 生成的路径
                 save_path = "{0}/{1}.{2}".format(self.deploy_path, deploy_name, "war")
+
+                # 删除已经存在的部署文件
+                """
+                处理原方法删除目录的产生只会处理最后一个文件
+                """
+                if os.path.exists(save_path):
+
+                    os.remove(save_path)
 
                 shutil.copy(deploy_files_path, self.deploy_path)
 
