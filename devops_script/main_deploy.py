@@ -58,11 +58,11 @@ def download_file(project):
 
         os.makedirs(download_save_path)
 
-    elif not os.path.exists(download_deploy_path):
+    if not os.path.exists(download_deploy_path):
 
         os.makedirs(download_deploy_path)
 
-    elif not os.path.exists(save_path):
+    if not os.path.exists(save_path):
 
         os.makedirs(save_path)
 
