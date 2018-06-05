@@ -5,7 +5,6 @@
 @author: EdwardLiu 
 @contact: lonnyliu@126.com
 
-@file: tmp.py
 @time: 2018/4/12 11:50
 
 """
