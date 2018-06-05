@@ -1,3 +1,4 @@
+# 测试版本检测
 ---
 - hosts: "{{ hosts }}"
   tasks:
